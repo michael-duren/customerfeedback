@@ -1,12 +1,11 @@
-import React from 'react';
-import { Container } from 'reactstrap';
+import './Layout.styles.css';
 import NavMenu from './NavMenu.tsx';
 
 export default function Layout({ children }) {
   return (
-    <div>
+    <div className="top-container">
       <NavMenu />
-      <Container tag="main">{children}</Container>
+      <div className="layout-content">{children}</div>
     </div>
   );
 }

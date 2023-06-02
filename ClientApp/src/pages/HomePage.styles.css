@@ -1,0 +1,27 @@
+.container {
+  margin-top: 6rem;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  padding: 2rem;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 4rem;
+}
+
+.icons {
+  height: 40vh;
+}
+
+.auth-buttons {
+  display: flex;
+  padding-top: 2rem;
+  gap: 2rem;
+}
+
+.auth-button {
+  font-size: 2rem;
+}

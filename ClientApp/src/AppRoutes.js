@@ -1,6 +1,5 @@
-import { Counter } from './components/Counter';
-import { FetchData } from './components/FetchData';
 import HomePage from './pages/HomePage.tsx';
+import FeedbackPage from './pages/FeedBackPage.tsx';
 
 const AppRoutes = [
   {
@@ -9,11 +8,7 @@ const AppRoutes = [
   },
   {
     path: '/feedback',
-    element: <Counter />,
-  },
-  {
-    path: '/',
-    element: <FetchData />,
+    element: <FeedbackPage />,
   },
 ];
 
