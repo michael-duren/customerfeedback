@@ -28,7 +28,7 @@ var app = builder.Build();
 // test
 app.MapGet("/api/hello", () => "Hello World!");
 
-// get all feedback
+// feedback endpoitns
 app.MapGet(
     "/api/feedback",
     async (AppDbContext context) =>
@@ -43,7 +43,24 @@ app.MapPost(
     {
         await context.Feedbacks.AddAsync(feedback);
         await context.SaveChangesAsync();
-        return feedback;
+        return Results.CreatedAtRoute();
+    }
+);
+
+app.MapPut(
+    "/api/feedback/{id}",
+    async (AppDbContext context, int id, Feedback newFeedback) =>
+    {
+        var feedback = await context.FindAsync<Feedback>(id);
+        if (feedback == null)
+            return Results.NotFound();
+        feedback.Title = newFeedback.Title;
+        feedback.Description = newFeedback.Description;
+        feedback.Rating = newFeedback.Rating;
+        feedback.DateReviewed = newFeedback.DateReviewed;
+        await context.SaveChangesAsync();
+
+        return Results.CreatedAtRoute();
     }
 );
 
