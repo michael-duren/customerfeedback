@@ -2,10 +2,13 @@ import { useState } from 'react';
 import GenericModal from '../../components/Modals/GenericModal';
 import './HomePage.styles.css';
 import LoginForm from '../../components/Forms/LoginForm';
+import RegisterForm from '../../components/Forms/RegisterForm';
 
 export default function HomePage() {
   const [loginModal, setLoginModal] = useState(false);
+  const [registerModal, setRegisterModal] = useState(false);
   const toggleLogin = () => setLoginModal(!loginModal);
+  const toggleRegister = () => setRegisterModal(!registerModal);
 
   return (
     <div className="container">
@@ -17,7 +20,12 @@ export default function HomePage() {
             <button onClick={toggleLogin} className="btn btn-lg btn-primary">
               Login
             </button>
-            <button className="btn btn-lg btn-secondary">Register</button>
+            <button
+              onClick={toggleRegister}
+              className="btn btn-lg btn-secondary"
+            >
+              Register
+            </button>
           </div>
         </div>
         <div className="aside">
@@ -28,9 +36,8 @@ export default function HomePage() {
           />
         </div>
         {/* modals */}
-        <GenericModal toggle={toggleLogin} modal={loginModal}>
-          <LoginForm />
-        </GenericModal>
+        <LoginForm toggle={toggleLogin} modal={loginModal} />
+        <RegisterForm toggle={toggleRegister} modal={registerModal} />
         {/* login */}
         <div></div>
       </main>

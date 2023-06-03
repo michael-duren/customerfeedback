@@ -3,11 +3,11 @@ import {
   FormGroup,
   Label,
   Input,
+  Modal,
+  ModalHeader,
   ModalBody,
   ModalFooter,
   Button,
-  ModalHeader,
-  Modal,
 } from 'reactstrap';
 
 interface Props {
@@ -15,10 +15,10 @@ interface Props {
   toggle: () => void;
 }
 
-export default function LoginForm({ modal, toggle }: Props) {
+export default function RegisterForm({ modal, toggle }: Props) {
   return (
     <Modal isOpen={modal} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Welcome Back! Login Below!</ModalHeader>
+      <ModalHeader toggle={toggle}>Welcome! Register Below!</ModalHeader>
       <Form>
         <ModalBody>
           <FormGroup>
