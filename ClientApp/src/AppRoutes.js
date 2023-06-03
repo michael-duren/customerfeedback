@@ -1,5 +1,5 @@
-import HomePage from './pages/HomePage.tsx';
-import FeedbackPage from './pages/FeedBackPage.tsx';
+import HomePage from './pages/Home/HomePage.tsx';
+import FeedbackPage from './pages/Feedback/FeedBackPage.tsx';
 
 const AppRoutes = [
   {

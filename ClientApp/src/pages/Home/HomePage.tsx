@@ -8,8 +8,8 @@ export default function HomePage() {
           <h1 className="h2">Welcome.</h1>
           <h2 className="h3">Sign in to get started or register</h2>
           <div className="auth-buttons">
-            <button className="btn auth-button btn-primary">Login</button>
-            <button className="btn auth-button btn-secondary">Register</button>
+            <button className="btn btn-lg btn-primary">Login</button>
+            <button className="btn btn-lg btn-secondary">Register</button>
           </div>
         </div>
         <div className="aside">
