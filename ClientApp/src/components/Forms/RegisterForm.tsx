@@ -22,12 +22,24 @@ export default function RegisterForm({ modal, toggle }: Props) {
       <Form>
         <ModalBody>
           <FormGroup>
-            <Label for="exampleEmail">Email</Label>
-            <Input id="exampleEmail" name="email" type="email" />
+            <Label for="name">Name</Label>
+            <Input id="name" name="name" type="text" />
           </FormGroup>
           <FormGroup>
-            <Label for="examplePassword">Password</Label>
-            <Input id="examplePassword" name="password" type="password" />
+            <Label for="email">Email</Label>
+            <Input id="email" name="email" type="email" />
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input id="password" name="password" type="password" />
+          </FormGroup>
+          <FormGroup>
+            <Label for="passwordVerified">Re-enter Password</Label>
+            <Input
+              id="passwordVerified"
+              name="passwordVerified"
+              type="password"
+            />
           </FormGroup>
         </ModalBody>
         <ModalFooter>

@@ -22,12 +22,12 @@ export default function LoginForm({ modal, toggle }: Props) {
       <Form>
         <ModalBody>
           <FormGroup>
-            <Label for="exampleEmail">Email</Label>
-            <Input id="exampleEmail" name="email" type="email" />
+            <Label for="email">Email</Label>
+            <Input id="email" name="email" type="email" />
           </FormGroup>
           <FormGroup>
-            <Label for="examplePassword">Password</Label>
-            <Input id="examplePassword" name="password" type="password" />
+            <Label for="password">Password</Label>
+            <Input id="password" name="password" type="password" />
           </FormGroup>
         </ModalBody>
         <ModalFooter>
