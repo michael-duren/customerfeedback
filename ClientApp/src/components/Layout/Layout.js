@@ -1,5 +1,5 @@
 import './Layout.styles.css';
-import NavMenu from './NavMenu.tsx';
+import NavMenu from '../Nav/NavMenu';
 
 export default function Layout({ children }) {
   return (
