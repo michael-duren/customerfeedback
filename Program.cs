@@ -1,6 +1,8 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -43,6 +45,11 @@ builder.Services.AddSwaggerGen(x =>
     );
 });
 
+// add fluent validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssemblyContaining<Feedback>();
+
 // add Authentication with JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
@@ -73,7 +80,6 @@ builder.Services.AddDbContext<AppDbContext>(
 // build app
 var app = builder.Build();
 
-// Configure
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -112,15 +118,24 @@ app.MapGet(
     .Produces<List<Feedback>>(StatusCodes.Status200OK);
 
 app.MapPost(
-        "/api/feedback",
-        async (AppDbContext context, Feedback feedback) =>
+        "/api/feedback/",
+        async (AppDbContext context, IValidator<Feedback> validator, Feedback feedback) =>
         {
+            var validationResult = await validator.ValidateAsync(feedback);
+            if (!validationResult.IsValid)
+            {
+                var errors = validationResult.Errors.Select(x => new { errors = x.ErrorMessage });
+                return Results.BadRequest(errors);
+            }
+
             await context.Feedbacks.AddAsync(feedback);
             await context.SaveChangesAsync();
-            return Results.CreatedAtRoute();
+            return Results.Ok();
         }
     )
-    .Produces(StatusCodes.Status201Created);
+    .AllowAnonymous();
+
+// .Produces(StatusCodes.Status201Created);
 
 app.MapPut(
         "/api/feedback/{id}",
@@ -135,9 +150,10 @@ app.MapPut(
             feedback.DateReviewed = newFeedback.DateReviewed;
             await context.SaveChangesAsync();
 
-            return Results.CreatedAtRoute();
+            return Results.Ok();
         }
     )
+    .AllowAnonymous()
     .Produces(StatusCodes.Status201Created);
 
 app.MapDelete(
@@ -152,7 +168,8 @@ app.MapDelete(
             return Results.Ok(204);
         }
     )
-    .Produces(StatusCodes.Status204NoContent);
+    .Produces(StatusCodes.Status204NoContent)
+    .AllowAnonymous();
 
 // seed database
 try
