@@ -20,7 +20,9 @@ else
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 }
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer(connection, options => options.EnableRetryOnFailure())
+);
 
 // build app and add api endpoints
 var app = builder.Build();
@@ -87,6 +89,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseIdentityServer();
+app.UseAuthorization();
 
 // app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
 
