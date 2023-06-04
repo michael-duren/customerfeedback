@@ -1,6 +1,8 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
+// add authorization policy
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser()
+        .Build();
+});
+
+// get connection string dependent on environment
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
 {
@@ -24,7 +38,7 @@ builder.Services.AddDbContext<AppDbContext>(
     options => options.UseSqlServer(connection, options => options.EnableRetryOnFailure())
 );
 
-// build app and add api endpoints, configure, add middleware
+// build app
 var app = builder.Build();
 
 // Configure
@@ -45,6 +59,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// don't map controllers
 // app.MapControllerRoute(name: "default", pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
@@ -53,6 +68,7 @@ app.MapFallbackToFile("index.html");
 app.MapGet("/api/hello", () => "Hello World!");
 
 // feedback endpoitns
+// don't have to be signed in to get feedback
 app.MapGet(
         "/api/feedback",
         async (AppDbContext context) =>
@@ -60,6 +76,7 @@ app.MapGet(
             return await context.Feedbacks.ToListAsync();
         }
     )
+    .AllowAnonymous()
     .Produces<List<Feedback>>(StatusCodes.Status200OK);
 
 app.MapPost(
@@ -119,3 +136,13 @@ catch (System.Exception)
 }
 
 app.Run();
+
+
+// builder.Services
+//     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.Authority =
+//             builder.Configuration["AzureAd:Instance"] + builder.Configuration["AzureAd:TenantId"];
+//         options.Audience = builder.Configuration["AzureAd:ClientId"];
+//     });
