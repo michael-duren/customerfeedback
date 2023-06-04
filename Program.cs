@@ -15,6 +15,7 @@ else
 
 // add services
 builder.Services.AddAppServices(builder.Configuration, connection!);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 // build app
 var app = builder.Build();

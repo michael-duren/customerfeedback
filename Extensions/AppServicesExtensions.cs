@@ -57,18 +57,6 @@ namespace CustomerFeedback.Extensions
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<Feedback>();
 
-            // add Authentication with JWT
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
-
-            // add authorization policy
-            services.AddAuthorization(options =>
-            {
-                options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser()
-                    .Build();
-            });
-
             services.AddDbContext<AppDbContext>(
                 options =>
                     options.UseSqlServer(connection, options => options.EnableRetryOnFailure())
