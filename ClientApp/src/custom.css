@@ -9,6 +9,9 @@
   --h6: var(--base-size);
 
   /* colors */
+  --red: #f87171;
+  --green: #4ade80;
+  --orange: #fb923c;
   --lime: #a4ffa2;
   --magenta: #f47dda;
   --magenta50: #f47dda80;

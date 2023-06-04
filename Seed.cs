@@ -22,51 +22,51 @@ namespace CustomerFeedback
                 },
                 new Feedback
                 {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
+                    Title = "It was alright",
+                    Description = "It was an okay app, I think it could be better",
+                    Rating = 3,
+                    DateReviewed = DateTime.Now
+                },
+                new Feedback
+                {
+                    Title = "God Awful",
+                    Description = "This app is terrible, I hate it",
+                    Rating = 1,
+                    DateReviewed = DateTime.Now
+                },
+                new Feedback
+                {
+                    Title = "AMAZING",
+                    Description = "this APP ROCKS",
                     Rating = 5,
                     DateReviewed = DateTime.Now
                 },
                 new Feedback
                 {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
+                    Title = "Barely Works",
+                    Description = "This app barely works, I can't believe I paid for this",
+                    Rating = 2,
+                    DateReviewed = DateTime.Now
+                },
+                new Feedback
+                {
+                    Title = "Sort of good....",
+                    Description = "This app is okay, I think it could be better",
                     Rating = 5,
                     DateReviewed = DateTime.Now
                 },
                 new Feedback
                 {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
+                    Title = "SIMPLY AMAZING",
+                    Description = "This app is the best app I've ever used, I love it so much",
                     Rating = 5,
                     DateReviewed = DateTime.Now
                 },
                 new Feedback
                 {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
-                    Rating = 5,
-                    DateReviewed = DateTime.Now
-                },
-                new Feedback
-                {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
-                    Rating = 5,
-                    DateReviewed = DateTime.Now
-                },
-                new Feedback
-                {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
-                    Rating = 5,
-                    DateReviewed = DateTime.Now
-                },
-                new Feedback
-                {
-                    Title = "Great App",
-                    Description = "I love this app, it's so easy to use and it's really helpful",
-                    Rating = 5,
+                    Title = "GOD AWFUL",
+                    Description = "This app is terrible, I hate it",
+                    Rating = 1,
                     DateReviewed = DateTime.Now
                 },
             };

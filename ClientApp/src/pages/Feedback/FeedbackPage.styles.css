@@ -11,8 +11,12 @@
   padding: 2rem;
   margin: 2rem;
   border-radius: 1rem;
-  background-color: var(--color-white);
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+}
+
+.feedback-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.5s ease-in-out;
 }
 
 .feedback-card h3 {
@@ -21,5 +25,26 @@
 
 .feedback-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.star {
+  margin-bottom: 1rem;
+}
+
+.positive {
+  background-color: var(--green);
+}
+.negative {
+  background-color: var(--red);
+  color: white;
+}
+.medium {
+  background-color: var(--orange);
+  color: white;
+}
+
+.time {
+  margin-top: 1rem;
+  font-size: 0.8rem;
 }
