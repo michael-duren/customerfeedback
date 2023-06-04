@@ -1,0 +1,25 @@
+.feedback-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  margin: 2rem;
+  border-radius: 1rem;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow);
+}
+
+.feedback-card h3 {
+  text-transform: uppercase;
+}
+
+.feedback-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
