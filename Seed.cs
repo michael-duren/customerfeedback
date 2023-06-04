@@ -1,13 +1,29 @@
 using CustomerFeedback.Models;
 using CustomerFeedback.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace CustomerFeedback
 {
     public class Seed
     {
-        public static async Task SeedData(AppDbContext context)
+        public static async Task SeedData(AppDbContext context, UserManager<AppUser> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var users = new List<AppUser>
+                {
+                    new AppUser { Email = "michael@michael.com" },
+                    new AppUser { Email = "daniel@daniel.com" },
+                    new AppUser { Email = "laurie@laurie.com" }
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "Pa$$w0rd!");
+                }
+            }
+
             if (await context.Feedbacks.AnyAsync())
                 return;
 

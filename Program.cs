@@ -2,6 +2,8 @@ using CustomerFeedback;
 using CustomerFeedback.Context;
 using CustomerFeedback.EndpointDefinitions;
 using CustomerFeedback.Extensions;
+using CustomerFeedback.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,8 +49,9 @@ try
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedData(context);
+    await Seed.SeedData(context, userManager);
 }
 catch (System.Exception)
 {
