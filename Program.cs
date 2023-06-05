@@ -1,6 +1,6 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
-using CustomerFeedback.EndpointDefinitions;
+using static CustomerFeedback.EndpointDefinitions.FeedbackEndpoint;
 using CustomerFeedback.Extensions;
 using CustomerFeedback.Models;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +42,7 @@ app.UseAuthorization();
 app.MapFallbackToFile("index.html");
 
 // feedback endpoitns
-FeedbackEndpoint.Map(app);
+MapFeedbackEndpoints(app);
 
 // seed database
 try
@@ -59,13 +59,3 @@ catch (System.Exception)
 }
 
 app.Run();
-
-
-// builder.Services
-//     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.Authority =
-//             builder.Configuration["AzureAd:Instance"] + builder.Configuration["AzureAd:TenantId"];
-//         options.Audience = builder.Configuration["AzureAd:ClientId"];
-//     });
