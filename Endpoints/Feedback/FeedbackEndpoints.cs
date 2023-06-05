@@ -1,7 +1,6 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
-using CustomerFeedback.Validation;
-using FluentValidation.Results;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
@@ -25,11 +24,10 @@ namespace CustomerFeedback.EndpointDefinitions
                     "/api/feedback/",
                     async (
                         AppDbContext context,
-                        // IValidator<Feedback> validator,
+                        IValidator<Feedback> validator,
                         Feedback feedback
                     ) =>
                     {
-                        FeedbackValidator validator = new();
                         IEnumerable<string> validatorResult = Validate(validator, feedback);
 
                         if (validatorResult.Any())
@@ -46,17 +44,20 @@ namespace CustomerFeedback.EndpointDefinitions
 
             app.MapPut(
                     "/api/feedback/{id}",
-                    async (AppDbContext context, int id, Feedback newFeedback) =>
+                    async (
+                        AppDbContext context,
+                        IValidator<Feedback> validator,
+                        int id,
+                        Feedback newFeedback
+                    ) =>
                     {
-                        var feedback = await context.FindAsync<Feedback>(id);
-                        if (feedback == null)
-                            return Results.NotFound();
-
-                        FeedbackValidator validator = new();
-                        IEnumerable<string> validatorResult = Validate(validator, feedback);
+                        IEnumerable<string> validatorResult = Validate(validator, newFeedback);
 
                         if (validatorResult.Any())
                             return Results.BadRequest(validatorResult);
+                        var feedback = await context.FindAsync<Feedback>(id);
+                        if (feedback == null)
+                            return Results.NotFound();
 
                         feedback.Title = newFeedback.Title;
                         feedback.Description = newFeedback.Description;

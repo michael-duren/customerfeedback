@@ -5,10 +5,7 @@ namespace CustomerFeedback.Endpoints
 {
     public static class ValidateResult
     {
-        public static IEnumerable<string> Validate<T>(
-            AbstractValidator<T> validator,
-            T verifyAgainst
-        )
+        public static IEnumerable<string> Validate<T>(IValidator<T> validator, T verifyAgainst)
         {
             ValidationResult results = validator.Validate(verifyAgainst);
 
