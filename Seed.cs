@@ -13,13 +13,29 @@ namespace CustomerFeedback
             {
                 var users = new List<AppUser>
                 {
-                    new AppUser { Email = "michael@michael.com" },
-                    new AppUser { Email = "daniel@daniel.com" },
-                    new AppUser { Email = "laurie@laurie.com" }
+                    new AppUser
+                    {
+                        Email = "michael@michael.com",
+                        UserName = "MichaelDuren",
+                        DisplayName = "Michael"
+                    },
+                    new AppUser
+                    {
+                        Email = "daniel@daniel.com",
+                        UserName = "DanielDuren",
+                        DisplayName = "Daniel"
+                    },
+                    new AppUser
+                    {
+                        Email = "laurie@laurie.com",
+                        UserName = "LaurieIngram",
+                        DisplayName = "Laurie"
+                    }
                 };
 
                 foreach (var user in users)
                 {
+                    Console.WriteLine($"SEEDING {user.UserName}");
                     await userManager.CreateAsync(user, "Pa$$w0rd!");
                 }
             }
