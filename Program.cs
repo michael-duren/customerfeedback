@@ -1,6 +1,6 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
-using static CustomerFeedback.EndpointDefinitions.FeedbackEndpoint;
+using CustomerFeedback.EndpointDefinitions;
 using CustomerFeedback.Extensions;
 using CustomerFeedback.Models;
 using Microsoft.AspNetCore.Identity;
@@ -42,7 +42,7 @@ app.UseAuthorization();
 app.MapFallbackToFile("index.html");
 
 // feedback endpoitns
-MapFeedbackEndpoints(app);
+app.MapFeedbackEndpoints();
 
 // create scope
 using var scope = app.Services.CreateScope();

@@ -8,7 +8,7 @@ namespace CustomerFeedback.EndpointDefinitions
 {
     public static class FeedbackEndpoint
     {
-        public static void MapFeedbackEndpoints(WebApplication app)
+        public static void MapFeedbackEndpoints(this WebApplication app)
         {
             app.MapGet(
                     "/api/feedback",
