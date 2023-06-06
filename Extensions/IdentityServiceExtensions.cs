@@ -1,5 +1,6 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CustomerFeedback.Extensions
 {
@@ -15,6 +16,7 @@ namespace CustomerFeedback.Extensions
                 {
                     opt.Password.RequiredLength = 8;
                 })
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddAuthentication();

@@ -7,8 +7,19 @@ namespace CustomerFeedback
 {
     public class Seed
     {
-        public static async Task SeedData(AppDbContext context, UserManager<AppUser> userManager)
+        public static async Task SeedData(
+            AppDbContext context,
+            UserManager<AppUser> userManager,
+            RoleManager<IdentityRole> roleManager
+        )
         {
+            var roles = new[] { "Admin", "Member" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                    await roleManager.CreateAsync(new IdentityRole(role));
+            }
+
             if (!userManager.Users.Any())
             {
                 var users = new List<AppUser>
@@ -17,7 +28,7 @@ namespace CustomerFeedback
                     {
                         Email = "michael@michael.com",
                         UserName = "MichaelDuren",
-                        DisplayName = "Michael"
+                        DisplayName = "Michael",
                     },
                     new AppUser
                     {

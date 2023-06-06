@@ -44,18 +44,24 @@ app.MapFallbackToFile("index.html");
 // feedback endpoitns
 MapFeedbackEndpoints(app);
 
+// create scope
+using var scope = app.Services.CreateScope();
+
+var services = scope.ServiceProvider;
+
 // seed database
 try
 {
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+    var context = services.GetRequiredService<AppDbContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await context.Database.MigrateAsync();
-    await Seed.SeedData(context, userManager);
+    await Seed.SeedData(context, userManager, roleManager);
 }
-catch (System.Exception)
+catch (Exception e)
 {
-    throw;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(e, "An error occured");
 }
 
 app.Run();
