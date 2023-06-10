@@ -8,6 +8,13 @@ namespace CustomerFeedback.Services
 {
     public class TokenService
     {
+        private readonly IConfiguration _config;
+
+        public TokenService(IConfiguration config)
+        {
+            _config = config;
+        }
+
         public string CreateToken(AppUser user)
         {
             // create the claims for the JWT
@@ -19,11 +26,7 @@ namespace CustomerFeedback.Services
             };
 
             // create a new symmetric key
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    "4e0cb400-3528-4b28-b455-67388c2fc2583309767f-589f-4dba-ac91-d6d837a3957a"
-                )
-            );
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]!));
 
             // signing credentials, the key and what alg to use
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);

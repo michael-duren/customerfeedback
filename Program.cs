@@ -42,7 +42,7 @@ app.UseAuthorization();
 
 app.MapFallbackToFile("index.html");
 
-// feedback endpoitns
+// API Endpoints
 app.MapFeedbackEndpoints();
 app.MapAccountEndpoints();
 

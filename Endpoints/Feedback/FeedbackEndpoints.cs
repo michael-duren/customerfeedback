@@ -18,8 +18,8 @@ namespace CustomerFeedback.EndpointDefinitions
                         return await context.Feedbacks.ToListAsync();
                     }
                 )
-                .AllowAnonymous()
-                .Produces<List<Feedback>>(statusCode: 200, contentType: "application/json");
+                .Produces<List<Feedback>>(statusCode: 200, contentType: "application/json")
+                .AllowAnonymous();
 
             app.MapPost(
                 "/api/feedback/",
