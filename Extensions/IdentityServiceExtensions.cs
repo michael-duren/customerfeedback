@@ -1,5 +1,6 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using CustomerFeedback.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomerFeedback.Extensions
@@ -20,6 +21,7 @@ namespace CustomerFeedback.Extensions
                 .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddAuthentication();
+            services.AddScoped<TokenService>();
 
             return services;
         }

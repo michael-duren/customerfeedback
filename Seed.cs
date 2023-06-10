@@ -41,13 +41,21 @@ namespace CustomerFeedback
                         Email = "laurie@laurie.com",
                         UserName = "LaurieIngram",
                         DisplayName = "Laurie"
+                    },
+                    new AppUser
+                    {
+                        Email = "admin@admin.com",
+                        UserName = "Admin",
+                        DisplayName = "Admin",
                     }
                 };
 
                 foreach (var user in users)
                 {
-                    Console.WriteLine($"SEEDING {user.UserName}");
                     await userManager.CreateAsync(user, "Pa$$w0rd!");
+
+                    if (user.UserName == "Admin")
+                        await userManager.AddToRoleAsync(user, "Admin");
                 }
             }
 

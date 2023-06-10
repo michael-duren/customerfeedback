@@ -1,6 +1,7 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
@@ -21,24 +22,19 @@ namespace CustomerFeedback.EndpointDefinitions
                 .Produces<List<Feedback>>(statusCode: 200, contentType: "application/json");
 
             app.MapPost(
-                    "/api/feedback/",
-                    async (
-                        AppDbContext context,
-                        IValidator<Feedback> validator,
-                        Feedback feedback
-                    ) =>
-                    {
-                        IEnumerable<string> validatorResult = Validate(validator, feedback);
+                "/api/feedback/",
+                async (AppDbContext context, IValidator<Feedback> validator, Feedback feedback) =>
+                {
+                    IEnumerable<string> validatorResult = Validate(validator, feedback);
 
-                        if (validatorResult.Any())
-                            return Results.BadRequest(validatorResult);
+                    if (validatorResult.Any())
+                        return Results.BadRequest(validatorResult);
 
-                        await context.Feedbacks.AddAsync(feedback);
-                        await context.SaveChangesAsync();
-                        return Results.Ok();
-                    }
-                )
-                .AllowAnonymous();
+                    await context.Feedbacks.AddAsync(feedback);
+                    await context.SaveChangesAsync();
+                    return Results.Ok();
+                }
+            );
 
             // .Produces(StatusCodes.Status201Created);
 
@@ -68,7 +64,6 @@ namespace CustomerFeedback.EndpointDefinitions
                         return Results.Ok();
                     }
                 )
-                .AllowAnonymous()
                 .Produces(StatusCodes.Status201Created);
 
             app.MapDelete(
