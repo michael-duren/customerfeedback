@@ -6,6 +6,7 @@ import { AiFillStar } from 'react-icons/ai';
 import dayjs from 'dayjs';
 import realtiveTime from 'dayjs/plugin/relativeTime';
 import { Spinner } from 'reactstrap';
+import agent from '../../api/agent';
 
 dayjs.extend(realtiveTime);
 
@@ -13,16 +14,14 @@ export default function FeedbackPage() {
   const [feedback, setFeedback] = useState<Feedback[]>([]);
   const [isLoading, SetIsLoading] = useState<boolean>(true);
 
-  const getFeedback = async () => {
-    const feedback = axios.get('/api/feedback');
-    return (await feedback).data;
-  };
-
   useEffect(() => {
-    getFeedback().then((data) => {
-      setFeedback(data);
+    const getFeedbacks = async () => {
+      const feedbackList = await agent.FeedbackApi.getAll();
+      setFeedback(feedbackList);
       SetIsLoading(false);
-    });
+    };
+
+    getFeedbacks();
   }, []);
 
   console.log(feedback);
