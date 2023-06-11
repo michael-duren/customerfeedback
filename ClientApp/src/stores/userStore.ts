@@ -6,6 +6,7 @@ import { router } from '../routes/router';
 
 export default class UserStore {
   user: User | null = null;
+  loadingUser: boolean = true;
 
   constructor() {
     makeAutoObservable(this);
@@ -35,6 +36,10 @@ export default class UserStore {
   // setters
   setUser = (user: User) => {
     this.user = user;
+  };
+
+  setLoadingUser = (loading: boolean) => {
+    this.loadingUser = loading;
   };
 
   // getters

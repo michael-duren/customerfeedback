@@ -5,8 +5,9 @@ import { ToastContainer } from 'react-toastify';
 import NavMenu from './components/Nav/NavMenu';
 import { useStore } from './stores/store';
 import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 
-export default function App() {
+export default observer(function App() {
   const { userStore, commonStore } = useStore();
 
   useEffect(() => {
@@ -15,24 +16,25 @@ export default function App() {
     } else {
       commonStore.setAppLoaded();
     }
-  }, [commonStore, userStore]);
+  }, [commonStore.token, userStore]);
 
-  // if (!commonStore.appLoaded)
-  //   return (
-  //     <div
-  //       style={{ minHeight: '100vh' }}
-  //       className="d-flex flex-column w-100 h-100 align-items-center justify-content-center"
-  //     >
-  //       <div
-  //         style={{ width: '3rem', height: '3rem' }}
-  //         className="spinner-border text-primary"
-  //         role="status"
-  //       >
-  //         <span className="visually-hidden">Loading...</span>
-  //       </div>
-  //       <div className="mt-4">Loading app...</div>
-  //     </div>
-  //   );
+  if (!commonStore.appLoaded) {
+    return (
+      <div
+        style={{ minHeight: '100vh' }}
+        className="d-flex flex-column w-100 h-100 align-items-center justify-content-center"
+      >
+        <div
+          style={{ width: '3rem', height: '3rem' }}
+          className="spinner-border text-primary"
+          role="status"
+        >
+          <span className="visually-hidden">Loading...</span>
+        </div>
+        <div className="mt-4">Loading app...</div>
+      </div>
+    );
+  }
 
   return (
     <Layout>
@@ -52,4 +54,4 @@ export default function App() {
       <Outlet />
     </Layout>
   );
-}
+});
