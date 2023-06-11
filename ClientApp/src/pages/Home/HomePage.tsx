@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import GenericModal from '../../components/Modals/GenericModal';
 import './HomePage.styles.css';
 import LoginForm from '../../components/Forms/LoginForm';
 import RegisterForm from '../../components/Forms/RegisterForm';
