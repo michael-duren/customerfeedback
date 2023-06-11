@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import LoginForm from '../Forms/LoginForm';
 import { Button } from 'reactstrap';
+import { useStore } from '../../stores/store';
+import { observer } from 'mobx-react-lite';
 
-export default function NavMenu() {
+export default observer(function NavMenu() {
+  const { userStore } = useStore();
+  const { user, logout } = userStore;
   const [loginModal, setLoginModal] = useState(false);
   const toggleLogin = () => setLoginModal(!loginModal);
 
@@ -23,9 +27,15 @@ export default function NavMenu() {
               <Link to={'/feedback'}>Feedback</Link>
             </li>
             <li>
-              <Button onClick={toggleLogin} color="primary">
-                Login
-              </Button>
+              {!user ? (
+                <Button onClick={toggleLogin} color="primary">
+                  Login
+                </Button>
+              ) : (
+                <Button onClick={() => logout()} className="btn-dark">
+                  Logout
+                </Button>
+              )}
             </li>
           </ul>
         </div>
@@ -37,4 +47,4 @@ export default function NavMenu() {
       />
     </header>
   );
-}
+});

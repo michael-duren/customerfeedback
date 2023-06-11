@@ -48,6 +48,14 @@ axios.interceptors.response.use(
 
 const responseData = <T>(response: AxiosResponse<T>) => response.data;
 
+axios.interceptors.request.use((config) => {
+  const token = store.commonStore.token;
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseData),
   post: <T>(url: string, body: {}) =>
