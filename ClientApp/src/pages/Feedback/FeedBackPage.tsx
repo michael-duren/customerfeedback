@@ -2,24 +2,39 @@ import './FeedbackPage.styles.css';
 import { AiFillStar } from 'react-icons/ai';
 import dayjs from 'dayjs';
 import realtiveTime from 'dayjs/plugin/relativeTime';
-import { Spinner } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import FeedbackForm from '../../components/Forms/FeedbackForm';
 
 dayjs.extend(realtiveTime);
 
 export default observer(function FeedbackPage() {
-  const { feedbackStore } = useStore();
-  const { isLoading, feedback } = feedbackStore;
+  const { feedbackStore, userStore } = useStore();
+  const { isLoading, feedback, loadFeedback } = feedbackStore;
+  const { user } = userStore;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggle = () => setIsModalOpen(!isModalOpen);
 
   useEffect(() => {
-    feedbackStore.loadFeedback();
+    loadFeedback();
   }, [feedbackStore]);
 
   return (
     <main className="feedback-page">
-      <h1 className="h2">Feedback</h1>
+      <div
+        className={`d-flex w-100 ${
+          user ? 'justify-content-between' : 'justify-content-center'
+        }`}
+      >
+        <h1 className="h2">Feedback</h1>
+        {user && (
+          <Button onClick={toggle} color="info">
+            Add Feedback
+          </Button>
+        )}
+      </div>
       <div>
         {isLoading ? (
           <Spinner
@@ -59,6 +74,11 @@ export default observer(function FeedbackPage() {
           </ul>
         )}
       </div>
+      <FeedbackForm
+        modal={isModalOpen}
+        setLoginModal={setIsModalOpen}
+        toggle={toggle}
+      />
     </main>
   );
 });

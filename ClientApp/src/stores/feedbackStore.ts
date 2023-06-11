@@ -22,6 +22,18 @@ export default class FeedbackStore {
     }
   };
 
+  createFeedback = async (newFeedback: Feedback) => {
+    this.setLoading(true);
+    try {
+      await agent.FeedbackApi.create(newFeedback);
+      this.loadFeedback();
+      this.setLoading(false);
+    } catch (error) {
+      console.log(error);
+      this.setLoading(false);
+    }
+  };
+
   // setters
   setFeedback = (feedback: Feedback[]) => {
     this.feedback = feedback;
