@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
@@ -13,6 +14,21 @@ namespace CustomerFeedback.Endpoints.Account
     {
         public static void MapAccountEndpoints(this WebApplication app)
         {
+            app.MapGet(
+                "/api/account",
+                async (
+                    UserManager<AppUser> userManager,
+                    TokenService tokenService,
+                    ClaimsPrincipal User
+                ) =>
+                {
+                    var user = await userManager.FindByEmailAsync(
+                        User.FindFirstValue(ClaimTypes.Email)!
+                    );
+
+                    return CreateUserObject(tokenService, user!);
+                }
+            );
             app.MapPost(
                     "/api/account/login",
                     async (
@@ -30,15 +46,7 @@ namespace CustomerFeedback.Endpoints.Account
 
                         if (result)
                         {
-                            var userDto = new AppUserDto
-                            {
-                                DisplayName = user.DisplayName,
-                                Email = user.Email!,
-                                UserName = user.UserName!,
-                                Token = tokenService.CreateToken(user)
-                            };
-
-                            return Results.Json(userDto);
+                            return Results.Json(CreateUserObject(tokenService, user));
                         }
 
                         return Results.Unauthorized();
@@ -56,7 +64,10 @@ namespace CustomerFeedback.Endpoints.Account
                         RegisterDto registerDto
                     ) =>
                     {
-                        IEnumerable<string> validatorResult = Validate(validator, registerDto);
+                        IEnumerable<string> validatorResult = Validate<RegisterDto>(
+                            validator,
+                            registerDto
+                        );
 
                         // Check for clean data
                         if (validatorResult.Any())
@@ -84,20 +95,23 @@ namespace CustomerFeedback.Endpoints.Account
                         var result = await userManager.CreateAsync(newUser);
 
                         if (result.Succeeded)
-                            return Results.Ok(
-                                new AppUserDto
-                                {
-                                    DisplayName = newUser.DisplayName,
-                                    UserName = newUser.UserName,
-                                    Email = newUser.Email,
-                                    Token = tokenService.CreateToken(newUser)
-                                }
-                            );
+                            return Results.Ok(CreateUserObject(tokenService, newUser));
 
                         return Results.BadRequest(result.Errors);
                     }
                 )
                 .AllowAnonymous();
+        }
+
+        private static AppUserDto CreateUserObject(TokenService tokenService, AppUser newUser)
+        {
+            return new AppUserDto
+            {
+                DisplayName = newUser.DisplayName,
+                UserName = newUser.UserName!,
+                Email = newUser.Email!,
+                Token = tokenService.CreateToken(newUser)
+            };
         }
     }
 }
