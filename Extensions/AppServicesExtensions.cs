@@ -1,5 +1,6 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using CustomerFeedback.Models.DTOs;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,7 @@ namespace CustomerFeedback.Extensions
             services.AddFluentValidationAutoValidation();
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<Feedback>();
+            services.AddValidatorsFromAssemblyContaining<RegisterDto>();
 
             services.AddDbContext<AppDbContext>(
                 options =>

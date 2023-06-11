@@ -20,6 +20,7 @@ namespace CustomerFeedback.Extensions
                 .AddIdentityCore<AppUser>(opt =>
                 {
                     opt.Password.RequiredLength = 8;
+                    opt.User.RequireUniqueEmail = true;
                 })
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();

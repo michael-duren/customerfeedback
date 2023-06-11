@@ -1,7 +1,6 @@
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
