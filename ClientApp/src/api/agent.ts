@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Feedback } from '../models/feedback';
+import { Feedback, FeedbackFormValues } from '../models/feedback';
 import { User, UserFormValues } from '../models/user';
 import { toast } from 'react-toastify';
 import { router } from '../routes/router';
@@ -66,7 +66,7 @@ const requests = {
 
 const FeedbackApi = {
   getAll: () => requests.get<Feedback[]>('/api/feedback/'),
-  create: (newFeedback: Feedback) =>
+  create: (newFeedback: FeedbackFormValues) =>
     requests.post<void>('/api/feedback/', newFeedback),
   update: (id: number, updatedFeedback: Feedback) =>
     requests.put<void>(`/api/feedback/${id}`, updatedFeedback),

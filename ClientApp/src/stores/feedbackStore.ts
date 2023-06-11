@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx';
-import { Feedback } from '../models/feedback';
+import { Feedback, FeedbackFormValues } from '../models/feedback';
 import agent from '../api/agent';
+import { toast } from 'react-toastify';
 
 export default class FeedbackStore {
   feedback: Feedback[] = [];
@@ -22,14 +23,16 @@ export default class FeedbackStore {
     }
   };
 
-  createFeedback = async (newFeedback: Feedback) => {
+  createFeedback = async (newFeedback: FeedbackFormValues) => {
     this.setLoading(true);
     try {
       await agent.FeedbackApi.create(newFeedback);
+      toast.success('Feedback created successfully');
       this.loadFeedback();
       this.setLoading(false);
     } catch (error) {
       console.log(error);
+      toast.error('Problem submitting feedback');
       this.setLoading(false);
     }
   };

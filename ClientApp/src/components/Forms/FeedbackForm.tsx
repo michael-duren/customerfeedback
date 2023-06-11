@@ -13,6 +13,8 @@ import {
   Spinner,
 } from 'reactstrap';
 import * as Yup from 'yup';
+import { useStore } from '../../stores/store';
+import { useEffect } from 'react';
 
 interface Props {
   modal: boolean;
@@ -21,24 +23,30 @@ interface Props {
 }
 
 export default function FeedbackForm({ modal, toggle, setLoginModal }: Props) {
+  const { feedbackStore } = useStore();
+  const { createFeedback, feedback } = feedbackStore;
+
+  useEffect(() => {
+    setLoginModal(false);
+  }, [feedback]);
+
   const formik = useFormik({
     initialValues: {
       title: '',
       description: '',
       rating: 3,
-      dateReviewed: new Date(),
+      dateReviewed: '',
       errors: null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().required('Title is required'),
-      description: Yup.string().required('Description is required'),
+      title: Yup.string().required().min(5),
+      description: Yup.string().required().min(10),
       rating: Yup.number().required('Rating is required'),
     }),
     onSubmit: async (values, { setErrors }) => {
-      values.dateReviewed = new Date();
+      values.dateReviewed = new Date().toISOString();
       try {
-        console.log(values);
-        console.log(formik.errors);
+        await createFeedback(values);
       } catch (e) {
         setErrors({ errors: 'Invalid email or password' });
       }
