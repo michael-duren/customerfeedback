@@ -2,6 +2,8 @@ import { useStore } from '../../stores/store';
 import { observer } from 'mobx-react-lite';
 
 export default observer(function ServerError() {
+  const { commonStore } = useStore();
+
   return (
     <div className="flex items-center justify-center">
       <div
@@ -11,13 +13,19 @@ export default observer(function ServerError() {
         <div className="text-center inline">
           <h2 className="text-2xl">
             <span className="font-bold">Server Error </span>
-            <span className="text-xl italic"></span>{' '}
+            <span className="text-xl italic">
+              {commonStore.error?.message}
+            </span>{' '}
           </h2>
         </div>
-        <div className="overflow-clip break-words">
-          <h4 className="mt-8">Stack trace</h4>
-          <code className="mt-8 text-[0.6rem] "></code>
-        </div>
+        {commonStore.error?.details && (
+          <div className="overflow-clip break-words">
+            <h4 className="mt-8">Stack trace</h4>
+            <code className="mt-8 text-[0.6rem] ">
+              {commonStore.error.details}
+            </code>
+          </div>
+        )}
       </div>
     </div>
   );

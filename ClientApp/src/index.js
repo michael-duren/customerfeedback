@@ -6,6 +6,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { StoreContext, store } from './stores/store.ts';
 import { router } from './routes/router.js';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);

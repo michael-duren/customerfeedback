@@ -3,6 +3,7 @@ import { Feedback } from '../models/feedback';
 import { User, UserFormValues } from '../models/user';
 import { toast } from 'react-toastify';
 import { router } from '../routes/router';
+import { store } from '../stores/store';
 
 axios.interceptors.response.use(
   (response) => response,
@@ -36,7 +37,7 @@ axios.interceptors.response.use(
         router.navigate('/not-found');
         break;
       case 500:
-        // store.commonStore.setServerError(data);
+        store.commonStore.setServerError(data);
         router.navigate('/server-error');
         break;
     }
