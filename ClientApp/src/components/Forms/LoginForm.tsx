@@ -9,33 +9,47 @@ import {
   ModalHeader,
   Modal,
   Spinner,
+  Alert,
 } from 'reactstrap';
 import { Formik } from 'formik';
 import { useStore } from '../../stores/store';
+import { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
 
 interface Props {
   modal: boolean;
   toggle: () => void;
+  setLoginModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function LoginForm({ modal, toggle }: Props) {
+export default observer(function LoginForm({
+  modal,
+  toggle,
+  setLoginModal,
+}: Props) {
   const { userStore } = useStore();
-  const { login } = userStore;
+  const { login, user } = userStore;
+
+  useEffect(() => {
+    if (user) {
+      setLoginModal(false);
+    }
+  }, [user]);
 
   return (
     <Modal isOpen={modal} toggle={toggle}>
       <ModalHeader toggle={toggle}>Welcome Back! Login Below!</ModalHeader>
       <Formik
-        initialValues={{ email: '', password: '' }}
-        onSubmit={async (values) => {
+        initialValues={{ email: '', password: '', errors: null }}
+        onSubmit={async (values, { setErrors }) => {
           try {
             await login(values);
           } catch (e) {
-            console.log(e);
+            setErrors({ errors: 'Invalid email or password' });
           }
         }}
       >
-        {({ values, handleChange, handleSubmit, isSubmitting }) => (
+        {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <ModalBody>
               <FormGroup>
@@ -46,6 +60,7 @@ export default function LoginForm({ modal, toggle }: Props) {
                   id="email"
                   name="email"
                   type="email"
+                  required
                 />
               </FormGroup>
               <FormGroup>
@@ -56,7 +71,13 @@ export default function LoginForm({ modal, toggle }: Props) {
                   value={values.password}
                   name="password"
                   type="password"
+                  required
                 />
+                {errors.errors && (
+                  <Alert className="mt-2 p-2" color="danger">
+                    {errors.errors}
+                  </Alert>
+                )}
               </FormGroup>
             </ModalBody>
             <ModalFooter>
@@ -65,7 +86,6 @@ export default function LoginForm({ modal, toggle }: Props) {
                 disabled={isSubmitting}
                 color="success"
                 outline
-                onClick={toggle}
               >
                 {isSubmitting ? <Spinner /> : <span>Login</span>}
               </Button>{' '}
@@ -78,4 +98,4 @@ export default function LoginForm({ modal, toggle }: Props) {
       </Formik>
     </Modal>
   );
-}
+});

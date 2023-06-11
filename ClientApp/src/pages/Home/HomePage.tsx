@@ -14,7 +14,7 @@ export default function HomePage() {
       <main>
         <div className="main">
           <h1 className="h2">Welcome.</h1>
-          <h2 className="h3">Sign in to get started or register</h2>
+          <h2 className="h3">Sign in or register to get started</h2>
           <div className="auth-buttons">
             <button onClick={toggleLogin} className="btn btn-lg btn-primary">
               Login
@@ -35,7 +35,11 @@ export default function HomePage() {
           />
         </div>
         {/* modals */}
-        <LoginForm toggle={toggleLogin} modal={loginModal} />
+        <LoginForm
+          toggle={toggleLogin}
+          setLoginModal={setLoginModal}
+          modal={loginModal}
+        />
         <RegisterForm toggle={toggleRegister} modal={registerModal} />
       </main>
     </div>

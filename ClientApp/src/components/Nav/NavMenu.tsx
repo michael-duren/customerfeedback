@@ -30,7 +30,11 @@ export default function NavMenu() {
           </ul>
         </div>
       </nav>
-      <LoginForm toggle={toggleLogin} modal={loginModal} />
+      <LoginForm
+        toggle={toggleLogin}
+        setLoginModal={setLoginModal}
+        modal={loginModal}
+      />
     </header>
   );
 }
