@@ -1,9 +1,9 @@
 import App from '../App';
 import { createBrowserRouter } from 'react-router-dom';
-import HomePage from '../pages/Home/HomePage';
-import FeedBackPage from '../pages/Feedback/FeedBackPage';
-import NotFound from '../pages/Errors/NotFound';
-import ServerError from '../pages/Errors/ServerError';
+import HomePage from './Home/HomePage';
+import FeedBackPage from './Feedback/FeedBackPage';
+import NotFound from './Errors/NotFound';
+import ServerError from './Errors/ServerError';
 import { Navigate } from 'react-router-dom';
 
 export const routes = [

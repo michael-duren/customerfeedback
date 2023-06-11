@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Feedback, FeedbackFormValues } from '../models/feedback';
 import { User, UserFormValues } from '../models/user';
 import { toast } from 'react-toastify';
-import { router } from '../routes/router';
+import { router } from '../pages/router';
 import { store } from '../stores/store';
 
 axios.interceptors.response.use(

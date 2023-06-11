@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { StoreContext, store } from './stores/store.ts';
-import { router } from './routes/router.js';
+import { router } from './pages/router.js';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 const rootElement = document.getElementById('root');

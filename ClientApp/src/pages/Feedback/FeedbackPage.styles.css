@@ -12,6 +12,7 @@
   margin: 2rem;
   border-radius: 1rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  max-width: 15rem;
 }
 
 .feedback-card:hover {
@@ -47,4 +48,21 @@
 .time {
   margin-top: 1rem;
   font-size: 0.8rem;
+}
+
+@media (max-width: 1280px) {
+  .feedback-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .feedback-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 540px) {
+  .feedback-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

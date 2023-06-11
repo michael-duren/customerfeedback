@@ -1,14 +1,10 @@
 import './FeedbackPage.styles.css';
-import { AiFillStar } from 'react-icons/ai';
-import dayjs from 'dayjs';
-import realtiveTime from 'dayjs/plugin/relativeTime';
 import { Button, Spinner } from 'reactstrap';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores/store';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import FeedbackForm from '../../components/Forms/FeedbackForm';
-
-dayjs.extend(realtiveTime);
+import FeedbackCard from '../../components/Cards/FeedbackCard';
 
 export default observer(function FeedbackPage() {
   const { feedbackStore, userStore } = useStore();
@@ -48,27 +44,9 @@ export default observer(function FeedbackPage() {
           <ul className="feedback-list">
             {feedback.map((feedback) => {
               return (
-                <li
-                  className={`feedback-card ${
-                    feedback.rating > 3
-                      ? 'positive'
-                      : feedback.rating === 3
-                      ? 'medium'
-                      : 'negative'
-                  }`}
-                  key={feedback.id}
-                >
-                  <div className="star">
-                    {Array.from({ length: feedback.rating }).map((_, i) => {
-                      return <AiFillStar key={i} size={35} />;
-                    })}
-                  </div>
-                  <h3 className="h4">{feedback.title}</h3>
-                  <p>{feedback.description}</p>
-                  <div className="time">
-                    {dayjs(feedback.dateReviewed).fromNow()}
-                  </div>
-                </li>
+                <Fragment key={feedback.id}>
+                  <FeedbackCard feedback={feedback} />
+                </Fragment>
               );
             })}
           </ul>
