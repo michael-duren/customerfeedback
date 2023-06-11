@@ -10,7 +10,6 @@ export default class FeedbackStore {
     makeAutoObservable(this);
   }
 
-  // getters
   loadFeedback = async () => {
     this.setLoading(true);
     try {

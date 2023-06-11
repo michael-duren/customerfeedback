@@ -1,17 +1,26 @@
-import { Route, Routes } from 'react-router-dom';
-import AppRoutes from './AppRoutes';
+import { Outlet } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import './custom.css';
+import { ToastContainer } from 'react-toastify';
+import NavMenu from './components/Nav/NavMenu';
 
 export default function App() {
   return (
     <Layout>
-      <Routes>
-        {AppRoutes.map((route, index) => {
-          const { element, ...rest } = route;
-          return <Route key={index} {...rest} element={element} />;
-        })}
-      </Routes>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <NavMenu />
+      <Outlet />
     </Layout>
   );
 }

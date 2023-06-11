@@ -8,8 +8,10 @@ import {
   Button,
   ModalHeader,
   Modal,
+  Spinner,
 } from 'reactstrap';
 import { Formik } from 'formik';
+import { useStore } from '../../stores/store';
 
 interface Props {
   modal: boolean;
@@ -17,12 +19,21 @@ interface Props {
 }
 
 export default function LoginForm({ modal, toggle }: Props) {
+  const { userStore } = useStore();
+  const { login } = userStore;
+
   return (
     <Modal isOpen={modal} toggle={toggle}>
       <ModalHeader toggle={toggle}>Welcome Back! Login Below!</ModalHeader>
       <Formik
         initialValues={{ email: '', password: '' }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={async (values) => {
+          try {
+            await login(values);
+          } catch (e) {
+            console.log(e);
+          }
+        }}
       >
         {({ values, handleChange, handleSubmit, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
@@ -56,7 +67,7 @@ export default function LoginForm({ modal, toggle }: Props) {
                 outline
                 onClick={toggle}
               >
-                Login
+                {isSubmitting ? <Spinner /> : <span>Login</span>}
               </Button>{' '}
               <Button color="danger" outline onClick={toggle}>
                 Cancel

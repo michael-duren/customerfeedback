@@ -1,22 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
+import { RouterProvider } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { StoreContext, store } from './stores/store.ts';
+import { router } from './routes/router.js';
 
-const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href');
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
 root.render(
-  <BrowserRouter basename={baseUrl}>
-    <StoreContext.Provider value={store}>
-      <App />
-    </StoreContext.Provider>
-  </BrowserRouter>
+  <StoreContext.Provider value={store}>
+    <RouterProvider router={router} />
+  </StoreContext.Provider>
 );
 
 // If you want your app to work offline and load faster, you can change
