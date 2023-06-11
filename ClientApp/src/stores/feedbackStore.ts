@@ -37,6 +37,20 @@ export default class FeedbackStore {
     }
   };
 
+  deleteFeedback = async (id: string) => {
+    this.setLoading(true);
+    try {
+      await agent.FeedbackApi.delete(id);
+      toast.success('Feedback deleted successfully');
+      this.loadFeedback();
+      this.setLoading(false);
+    } catch (error) {
+      console.log(error);
+      toast.error('Problem deleting feedback');
+      this.setLoading(false);
+    }
+  };
+
   // setters
   setFeedback = (feedback: Feedback[]) => {
     this.feedback = feedback;

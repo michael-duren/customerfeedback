@@ -68,9 +68,9 @@ const FeedbackApi = {
   getAll: () => requests.get<Feedback[]>('/api/feedback/'),
   create: (newFeedback: FeedbackFormValues) =>
     requests.post<void>('/api/feedback/', newFeedback),
-  update: (id: number, updatedFeedback: Feedback) =>
+  update: (id: string, updatedFeedback: Feedback) =>
     requests.put<void>(`/api/feedback/${id}`, updatedFeedback),
-  delete: (id: number) => requests.del<void>(`/api/feedback/${id}`),
+  delete: (id: string) => requests.del<void>(`/api/feedback/${id}`),
 };
 
 const AccountApi = {

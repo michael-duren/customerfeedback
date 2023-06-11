@@ -77,8 +77,7 @@ namespace CustomerFeedback.EndpointDefinitions
                         return Results.Ok(204);
                     }
                 )
-                .Produces(StatusCodes.Status204NoContent)
-                .AllowAnonymous();
+                .Produces(StatusCodes.Status204NoContent);
         }
     }
 }

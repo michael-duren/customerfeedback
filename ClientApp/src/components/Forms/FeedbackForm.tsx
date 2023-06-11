@@ -119,7 +119,7 @@ export default function FeedbackForm({ modal, toggle, setLoginModal }: Props) {
         <ModalFooter>
           <Button
             type="submit"
-            disabled={formik.isSubmitting}
+            disabled={formik.isSubmitting || !formik.isValid}
             color="success"
             outline
           >
