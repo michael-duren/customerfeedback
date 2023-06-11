@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
+import LoginForm from '../Forms/LoginForm';
+import { Button } from 'reactstrap';
 
 export default function NavMenu() {
-  const [toggleNavBar, setToggleNavBar] = useState(false);
-
-  const onToggleNavbar = (): void => {
-    setToggleNavBar(!toggleNavBar);
-  };
+  const [loginModal, setLoginModal] = useState(false);
+  const toggleLogin = () => setLoginModal(!loginModal);
 
   return (
     <header>
@@ -15,7 +14,6 @@ export default function NavMenu() {
         <Link className="h3 logo" to={'/'}>
           Customer Feedback
         </Link>
-        <div onClick={onToggleNavbar} className="mr-2" />
         <div>
           <ul className="navbar-nav">
             <li>
@@ -25,11 +23,14 @@ export default function NavMenu() {
               <Link to={'/feedback'}>Feedback</Link>
             </li>
             <li>
-              <button className="btn btn-primary">Log In</button>
+              <Button onClick={toggleLogin} color="primary">
+                Login
+              </Button>
             </li>
           </ul>
         </div>
       </nav>
+      <LoginForm toggle={toggleLogin} modal={loginModal} />
     </header>
   );
 }

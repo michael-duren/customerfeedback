@@ -37,8 +37,6 @@ export default function HomePage() {
         {/* modals */}
         <LoginForm toggle={toggleLogin} modal={loginModal} />
         <RegisterForm toggle={toggleRegister} modal={registerModal} />
-        {/* login */}
-        <div></div>
       </main>
     </div>
   );
