@@ -12,9 +12,9 @@ import {
   ModalHeader,
   Spinner,
 } from 'reactstrap';
-import * as Yup from 'yup';
 import { useStore } from '../../stores/store';
 import { useEffect } from 'react';
+import { feedbackFormSchema } from './schemas/feedbackFormSchema';
 
 interface Props {
   modal: boolean;
@@ -38,11 +38,7 @@ export default function FeedbackForm({ modal, toggle, setLoginModal }: Props) {
       dateReviewed: '',
       errors: null,
     },
-    validationSchema: Yup.object({
-      title: Yup.string().required().min(5),
-      description: Yup.string().required().min(10),
-      rating: Yup.number().required('Rating is required'),
-    }),
+    validationSchema: feedbackFormSchema,
     onSubmit: async (values, { setErrors }) => {
       values.dateReviewed = new Date().toISOString();
       try {
