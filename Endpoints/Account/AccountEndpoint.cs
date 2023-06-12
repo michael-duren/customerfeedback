@@ -64,26 +64,18 @@ namespace CustomerFeedback.Endpoints.Account
                         RegisterDto registerDto
                     ) =>
                     {
-                        IEnumerable<string> validatorResult = Validate<RegisterDto>(
-                            validator,
-                            registerDto
-                        );
+                        var validationResult = await validator.ValidateAsync(registerDto);
 
                         // Check for clean data
-                        if (validatorResult.Any())
-                            return Results.BadRequest(validatorResult);
-
-                        // Check if username is already taken
-                        if (
-                            await userManager.Users.AnyAsync(
-                                x => x.UserName == registerDto.Username
-                            )
-                        )
-                            return Results.BadRequest("Username is already taken");
-
-                        // Check if Email is unique
-                        if (await userManager.Users.AnyAsync(x => x.Email == registerDto.Email))
-                            return Results.BadRequest("Email is already taken");
+                        if (!validationResult.IsValid)
+                            return Results.ValidationProblem(
+                                validationResult.Errors
+                                    .GroupBy(e => e.PropertyName)
+                                    .ToDictionary(
+                                        errors => errors.Key,
+                                        errors => errors.Select(e => e.ErrorMessage).ToArray()
+                                    )
+                            );
 
                         AppUser newUser = new AppUser
                         {

@@ -12,6 +12,8 @@ import {
   Alert,
 } from 'reactstrap';
 import * as Yup from 'yup';
+import { useStore } from '../../stores/store';
+import ValidationError from '../Errors/ValidationError';
 
 interface Props {
   modal: boolean;
@@ -19,6 +21,9 @@ interface Props {
 }
 
 export default function RegisterForm({ modal, toggle }: Props) {
+  const { userStore } = useStore();
+  const { register } = userStore;
+
   const regex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
@@ -29,24 +34,25 @@ export default function RegisterForm({ modal, toggle }: Props) {
       email: '',
       password: '',
       reEnterPassword: '',
+      errors: null,
     },
     validationSchema: Yup.object({
       displayName: Yup.string()
-        .required()
+        .required("Display name can't be empty")
         .min(3)
         .matches(
           /^[a-zA-Z0-9]+$/,
           'Display name must contain only letters and numbers'
         ),
       username: Yup.string()
-        .required()
+        .required("Username can't be empty")
         .min(6)
         .matches(
           /^[a-zA-Z0-9]+$/,
           'Username name must contain only letters and numbers'
         ),
       password: Yup.string()
-        .required()
+        .required("Password can't be empty")
         .min(8)
         .matches(
           regex,
@@ -60,9 +66,18 @@ export default function RegisterForm({ modal, toggle }: Props) {
           'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special case character'
         )
         .oneOf([Yup.ref('password')], 'Passwords do not match'),
-      email: Yup.string().required().email(),
+      email: Yup.string()
+        .required("Email can't be empty")
+        .email('Email must be valid emai'),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      const { displayName, username, email, password } = values;
+      try {
+        await register({ displayName, username, email, password });
+      } catch (e: any) {
+        formik.setErrors({ errors: e });
+      }
+      register({ displayName, username, email, password });
       console.log(values);
     },
   });
@@ -70,7 +85,7 @@ export default function RegisterForm({ modal, toggle }: Props) {
   return (
     <Modal isOpen={modal} toggle={toggle}>
       <ModalHeader toggle={toggle}>Welcome! Register Below!</ModalHeader>
-      <Form>
+      <Form onSubmit={formik.handleSubmit}>
         <ModalBody>
           <FormGroup>
             <Label for="name">Display Name</Label>
@@ -159,6 +174,7 @@ export default function RegisterForm({ modal, toggle }: Props) {
                 {formik.errors.reEnterPassword}
               </Alert>
             ) : null}
+            <ValidationError errors={formik.errors.errors} />
           </FormGroup>
         </ModalBody>
         <ModalFooter>
@@ -167,7 +183,6 @@ export default function RegisterForm({ modal, toggle }: Props) {
             color="success"
             disabled={formik.isSubmitting || !formik.isValid}
             outline
-            onClick={toggle}
           >
             Login
           </Button>{' '}

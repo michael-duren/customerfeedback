@@ -87,7 +87,7 @@ export default observer(function LoginForm({
                 color="success"
                 outline
               >
-                {isSubmitting ? <Spinner /> : <span>Login</span>}
+                {isSubmitting ? <Spinner size={'sm'} /> : <span>Login</span>}
               </Button>{' '}
               <Button color="danger" outline onClick={toggle}>
                 Cancel

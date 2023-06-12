@@ -1,20 +1,27 @@
+using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerFeedback.Endpoints.Account
 {
     public class AccountValidator : AbstractValidator<RegisterDto>
     {
         private readonly string _regex;
+        public UserManager<AppUser> _userManager { get; }
 
-        public AccountValidator()
+        public AccountValidator(UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _regex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
 
             RuleFor(x => x.Username)
                 .NotEmpty()
                 .MinimumLength(6)
-                .WithMessage("Username must have at least 6 characters");
+                .WithMessage("Username must have at least 6 characters")
+                .MustAsync(BeUniqueUsername)
+                .WithMessage("Username already exists");
             RuleFor(x => x.DisplayName)
                 .NotEmpty()
                 .MinimumLength(3)
@@ -22,13 +29,31 @@ namespace CustomerFeedback.Endpoints.Account
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .EmailAddress()
-                .WithMessage("Please enter a non empty email address");
+                .WithMessage("Please enter a valid email address")
+                .MustAsync(BeUniqueEmail)
+                .WithMessage("Email already exists");
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .Matches(_regex)
                 .WithMessage(
                     "Password must contain an uppercase and lowercase letter, a special character, a number, and must be 8 characters or more"
                 );
+        }
+
+        private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user is null;
+        }
+
+        private async Task<bool> BeUniqueUsername(
+            string username,
+            CancellationToken cancellationToken
+        )
+        {
+            var users = await _userManager.Users.ToListAsync();
+            var user = users.Find(u => u.UserName == username);
+            return user is null;
         }
     }
 }
