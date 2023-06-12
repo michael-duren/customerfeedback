@@ -5,8 +5,6 @@ using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using static CustomerFeedback.Endpoints.ValidateResult;
 
 namespace CustomerFeedback.Endpoints.Account
 {
@@ -69,12 +67,7 @@ namespace CustomerFeedback.Endpoints.Account
                         // Check for clean data
                         if (!validationResult.IsValid)
                             return Results.ValidationProblem(
-                                validationResult.Errors
-                                    .GroupBy(e => e.PropertyName)
-                                    .ToDictionary(
-                                        errors => errors.Key,
-                                        errors => errors.Select(e => e.ErrorMessage).ToArray()
-                                    )
+                                CreateValidationDictionary(validationResult.Errors)
                             );
 
                         AppUser newUser = new AppUser
@@ -104,6 +97,18 @@ namespace CustomerFeedback.Endpoints.Account
                 Email = newUser.Email!,
                 Token = tokenService.CreateToken(newUser)
             };
+        }
+
+        private static IDictionary<string, string[]> CreateValidationDictionary(
+            List<FluentValidation.Results.ValidationFailure> errors
+        )
+        {
+            return errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    errors => errors.Key,
+                    errors => errors.Select(e => e.ErrorMessage).ToArray()
+                );
         }
     }
 }
