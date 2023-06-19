@@ -1,5 +1,8 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
+using CustomerFeedback.Models.DTOs;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
@@ -12,9 +15,11 @@ namespace CustomerFeedback.EndpointDefinitions
         {
             app.MapGet(
                     "/api/feedback",
-                    async (AppDbContext context) =>
+                    async (AppDbContext context, IMapper mapper) =>
                     {
-                        return await context.Feedbacks.ToListAsync();
+                        return await context.Feedbacks
+                            .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
+                            .ToListAsync();
                     }
                 )
                 .Produces<List<Feedback>>(statusCode: 200, contentType: "application/json")
@@ -43,7 +48,8 @@ namespace CustomerFeedback.EndpointDefinitions
                         AppDbContext context,
                         IValidator<Feedback> validator,
                         int id,
-                        Feedback newFeedback
+                        Feedback newFeedback,
+                        IMapper mapper
                     ) =>
                     {
                         IEnumerable<string> validatorResult = Validate(validator, newFeedback);
@@ -54,10 +60,7 @@ namespace CustomerFeedback.EndpointDefinitions
                         if (feedback == null)
                             return Results.NotFound();
 
-                        feedback.Title = newFeedback.Title;
-                        feedback.Description = newFeedback.Description;
-                        feedback.Rating = newFeedback.Rating;
-                        feedback.DateReviewed = newFeedback.DateReviewed;
+                        mapper.Map(newFeedback, feedback);
                         await context.SaveChangesAsync();
 
                         return Results.Ok();

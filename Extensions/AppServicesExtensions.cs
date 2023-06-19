@@ -1,4 +1,5 @@
 using CustomerFeedback.Context;
+using CustomerFeedback.Endpoints.MappingProfiles;
 using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using FluentValidation;
@@ -56,6 +57,9 @@ namespace CustomerFeedback.Extensions
             services.AddFluentValidationClientsideAdapters();
             services.AddValidatorsFromAssemblyContaining<Feedback>();
             services.AddValidatorsFromAssemblyContaining<RegisterDto>();
+
+            // auto mapper
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             services.AddDbContext<AppDbContext>(
                 options =>
