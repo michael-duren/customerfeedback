@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // get connection string dependent on environment
 var connection = String.Empty;
 if (builder.Environment.IsDevelopment())
-    connection = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+    connection = builder.Configuration.GetConnectionString("DefaultConnection");
 else
     connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 
