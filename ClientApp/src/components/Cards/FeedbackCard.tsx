@@ -49,6 +49,7 @@ export default function FeedbackCard({ feedback }: Props) {
           </div>
           <h3 className="h4">{feedback.title}</h3>
           <p>{feedback.description}</p>
+          <div className="reviewer">Reviewed by {feedback.username}</div>
           <div className="time">{dayjs(feedback.dateReviewed).fromNow()}</div>
         </li>
       </div>

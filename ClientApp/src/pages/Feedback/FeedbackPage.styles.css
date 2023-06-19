@@ -58,6 +58,10 @@
 }
 
 .time {
+  font-size: 0.8rem;
+}
+
+.reviewer {
   margin-top: 1rem;
   font-size: 0.8rem;
 }

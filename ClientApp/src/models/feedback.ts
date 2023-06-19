@@ -4,6 +4,7 @@ export interface Feedback {
   description: string;
   rating: number;
   dateReviewed: string;
+  username: string;
 }
 
 export interface FeedbackFormValues {
