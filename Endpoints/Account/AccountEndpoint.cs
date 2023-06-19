@@ -92,6 +92,7 @@ namespace CustomerFeedback.Endpoints.Account
         {
             return new AppUserDto
             {
+                Id = newUser.Id,
                 DisplayName = newUser.DisplayName,
                 UserName = newUser.UserName!,
                 Email = newUser.Email!,

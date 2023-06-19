@@ -21,6 +21,7 @@ export default class UserStore {
       const user = await agent.AccountApi.login(creds);
       store.commonStore.setToken(user.token);
       runInAction(() => (this.user = user));
+      console.log(user);
       router.navigate('/feedback');
     } catch (error) {
       throw error;

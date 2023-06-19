@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function FeedbackForm({ modal, toggle, setLoginModal }: Props) {
-  const { feedbackStore } = useStore();
+  const { feedbackStore, userStore } = useStore();
   const { createFeedback, feedback } = feedbackStore;
 
   useEffect(() => {
@@ -40,9 +40,13 @@ export default function FeedbackForm({ modal, toggle, setLoginModal }: Props) {
     },
     validationSchema: feedbackFormSchema,
     onSubmit: async (values, { setErrors }) => {
-      values.dateReviewed = new Date().toISOString();
+      const newFeedback = {
+        ...values,
+        dateReviewed: new Date().toISOString(),
+        userId: userStore.user?.id,
+      };
       try {
-        await createFeedback(values);
+        await createFeedback(newFeedback);
       } catch (e) {
         setErrors({ errors: 'Invalid email or password' });
       }
