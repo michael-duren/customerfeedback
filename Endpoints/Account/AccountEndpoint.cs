@@ -3,6 +3,7 @@ using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Services;
 using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 
 namespace CustomerFeedback.Endpoints.Account
@@ -71,10 +72,9 @@ namespace CustomerFeedback.Endpoints.Account
 
                         var result = await userManager.CreateAsync(newUser);
 
-                        if (result.Succeeded)
-                            return Results.Ok(CreateUserObject(tokenService, newUser));
-
-                        return Results.BadRequest(result.Errors);
+                        return result.Succeeded
+                            ? Results.Ok(CreateUserObject(tokenService, newUser))
+                            : Results.BadRequest(result.Errors);
                     }
                 )
                 .AllowAnonymous();
@@ -93,7 +93,7 @@ namespace CustomerFeedback.Endpoints.Account
         }
 
         private static IDictionary<string, string[]> CreateValidationDictionary(
-            List<FluentValidation.Results.ValidationFailure> errors
+            IEnumerable<ValidationFailure> errors
         )
         {
             return errors
