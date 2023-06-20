@@ -6,7 +6,7 @@ using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
-namespace CustomerFeedback.Models
+namespace CustomerFeedback.Endpoints.Feedback
 {
     public static class FeedbackEndpoint
     {

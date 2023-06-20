@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CustomerFeedback
 {
-    public class Seed
+    public static class Seed
     {
         public static async Task SeedData(
             AppDbContext context,

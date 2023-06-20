@@ -40,11 +40,11 @@ namespace CustomerFeedback.Services
             };
 
             // create the token handler, and then token
-            var tokenHanlder = new JwtSecurityTokenHandler();
-            var token = tokenHanlder.CreateToken(tokenDescriptor);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
             // return the serialized token
-            return tokenHanlder.WriteToken(token);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

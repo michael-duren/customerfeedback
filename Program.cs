@@ -1,6 +1,7 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
 using CustomerFeedback.Endpoints.Account;
+using CustomerFeedback.Endpoints.Feedback;
 using CustomerFeedback.Extensions;
 using CustomerFeedback.Models;
 using Microsoft.AspNetCore.Identity;

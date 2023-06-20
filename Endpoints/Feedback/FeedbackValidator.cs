@@ -1,9 +1,9 @@
 using CustomerFeedback.Models;
 using FluentValidation;
 
-namespace CustomerFeedback.Validation
+namespace CustomerFeedback.Endpoints.Feedback
 {
-    public class FeedbackValidator : AbstractValidator<Feedback>
+    public class FeedbackValidator : AbstractValidator<Models.Feedback>
     {
         public FeedbackValidator()
         {

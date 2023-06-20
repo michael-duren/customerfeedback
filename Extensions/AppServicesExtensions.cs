@@ -63,7 +63,8 @@ namespace CustomerFeedback.Extensions
 
             services.AddDbContext<AppDbContext>(
                 options =>
-                    options.UseSqlServer(connection, options => options.EnableRetryOnFailure())
+                    options.UseSqlServer(connection,
+                        sqlServerDbContextOptionsBuilder => sqlServerDbContextOptionsBuilder.EnableRetryOnFailure())
             );
 
             return services;

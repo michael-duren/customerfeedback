@@ -1,5 +1,4 @@
 using AutoMapper;
-using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 
 namespace CustomerFeedback.Endpoints.MappingProfiles
@@ -9,8 +8,8 @@ namespace CustomerFeedback.Endpoints.MappingProfiles
         public MappingProfiles()
         {
             // Feedback Maps
-            CreateMap<Feedback, Feedback>();
-            CreateMap<Feedback, FeedbackDto>()
+            CreateMap<Models.Feedback, Models.Feedback>();
+            CreateMap<Models.Feedback, FeedbackDto>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.UserName));
         }
     }

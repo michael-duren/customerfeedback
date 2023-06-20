@@ -8,13 +8,12 @@ namespace CustomerFeedback.Endpoints.Account
 {
     public class AccountValidator : AbstractValidator<RegisterDto>
     {
-        private readonly string _regex;
-        public UserManager<AppUser> _userManager { get; }
+        private UserManager<AppUser> UserManager { get; }
 
         public AccountValidator(UserManager<AppUser> userManager)
         {
-            _userManager = userManager;
-            _regex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
+            UserManager = userManager;
+            var regex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$";
 
             RuleFor(x => x.Username)
                 .NotEmpty()
@@ -34,7 +33,7 @@ namespace CustomerFeedback.Endpoints.Account
                 .WithMessage("Email already exists");
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .Matches(_regex)
+                .Matches(regex)
                 .WithMessage(
                     "Password must contain an uppercase and lowercase letter, a special character, a number, and must be 8 characters or more"
                 );
@@ -42,7 +41,7 @@ namespace CustomerFeedback.Endpoints.Account
 
         private async Task<bool> BeUniqueEmail(string email, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await UserManager.FindByEmailAsync(email);
             return user is null;
         }
 
@@ -51,7 +50,7 @@ namespace CustomerFeedback.Endpoints.Account
             CancellationToken cancellationToken
         )
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await UserManager.Users.ToListAsync();
             var user = users.Find(u => u.UserName == username);
             return user is null;
         }

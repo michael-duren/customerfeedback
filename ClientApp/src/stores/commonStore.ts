@@ -1,36 +1,36 @@
-import { makeAutoObservable, reaction } from 'mobx';
-import { IServerError } from '../models/serverError';
+import {makeAutoObservable, reaction} from 'mobx';
+import {IServerError} from '../models/serverError';
 
 export default class CommonStore {
-  error: IServerError | null = null;
-  token: string | null = localStorage.getItem('jwt');
-  appLoaded: boolean = false;
+    error: IServerError | null = null;
+    token: string | null = localStorage.getItem('jwt');
+    appLoaded: boolean = false;
 
-  constructor() {
-    makeAutoObservable(this);
+    constructor() {
+        makeAutoObservable(this);
 
-    // reacts to changes in the token property
-    reaction(
-      () => this.token,
-      (token) => {
-        if (token) {
-          localStorage.setItem('jwt', token);
-        } else {
-          localStorage.removeItem('jwt');
-        }
-      }
-    );
-  }
+        // reacts to changes in the token property
+        reaction(
+            () => this.token,
+            (token) => {
+                if (token) {
+                    localStorage.setItem('jwt', token);
+                } else {
+                    localStorage.removeItem('jwt');
+                }
+            }
+        );
+    }
 
-  setServerError = (error: IServerError) => {
-    this.error = error;
-  };
+    setServerError = (error: IServerError): void => {
+        this.error = error;
+    };
 
-  setToken = (token: string | null) => {
-    this.token = token;
-  };
+    setToken = (token: string | null): void => {
+        this.token = token;
+    };
 
-  setAppLoaded = () => {
-    this.appLoaded = true;
-  };
+    setAppLoaded = (): void => {
+        this.appLoaded = true;
+    };
 }
