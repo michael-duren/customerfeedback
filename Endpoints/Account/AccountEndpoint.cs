@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Services;
@@ -17,11 +16,11 @@ namespace CustomerFeedback.Endpoints.Account
                 async (
                     UserManager<AppUser> userManager,
                     TokenService tokenService,
-                    ClaimsPrincipal User
+                    ClaimsPrincipal claimsPrincipal
                 ) =>
                 {
                     var user = await userManager.FindByEmailAsync(
-                        User.FindFirstValue(ClaimTypes.Email)!
+                        claimsPrincipal.FindFirstValue(ClaimTypes.Email)!
                     );
 
                     return CreateUserObject(tokenService, user!);
@@ -30,7 +29,6 @@ namespace CustomerFeedback.Endpoints.Account
             app.MapPost(
                     "/api/account/login",
                     async (
-                        AppDbContext context,
                         UserManager<AppUser> userManager,
                         TokenService tokenService,
                         LoginDto loginDto
@@ -42,12 +40,7 @@ namespace CustomerFeedback.Endpoints.Account
 
                         var result = await userManager.CheckPasswordAsync(user, loginDto.Password);
 
-                        if (result)
-                        {
-                            return Results.Json(CreateUserObject(tokenService, user));
-                        }
-
-                        return Results.Unauthorized();
+                        return result ? Results.Json(CreateUserObject(tokenService, user)) : Results.Unauthorized();
                     }
                 )
                 .AllowAnonymous();
@@ -55,7 +48,6 @@ namespace CustomerFeedback.Endpoints.Account
             app.MapPost(
                     "/api/account/register",
                     async (
-                        AppDbContext context,
                         UserManager<AppUser> userManager,
                         TokenService tokenService,
                         IValidator<RegisterDto> validator,
@@ -107,8 +99,8 @@ namespace CustomerFeedback.Endpoints.Account
             return errors
                 .GroupBy(e => e.PropertyName)
                 .ToDictionary(
-                    errors => errors.Key,
-                    errors => errors.Select(e => e.ErrorMessage).ToArray()
+                    validationFailures => validationFailures.Key,
+                    validationFailures => validationFailures.Select(e => e.ErrorMessage).ToArray()
                 );
         }
     }

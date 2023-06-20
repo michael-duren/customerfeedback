@@ -1,13 +1,12 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CustomerFeedback.Context;
-using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
-namespace CustomerFeedback.EndpointDefinitions
+namespace CustomerFeedback.Models
 {
     public static class FeedbackEndpoint
     {
@@ -15,19 +14,15 @@ namespace CustomerFeedback.EndpointDefinitions
         {
             app.MapGet(
                     "/api/feedback",
-                    async (AppDbContext context, IMapper mapper) =>
-                    {
-                        return await context.Feedbacks
-                            .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
-                            .ToListAsync();
-                    }
-                )
-                .Produces<List<Feedback>>(statusCode: 200, contentType: "application/json")
+                    async (AppDbContext context, IMapper mapper) => await context.Feedbacks
+                        .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
+                        .ToListAsync())
+                .Produces<List<Models.Feedback>>(statusCode: 200, contentType: "application/json")
                 .AllowAnonymous();
 
             app.MapPost(
                 "/api/feedback/",
-                async (AppDbContext context, IValidator<Feedback> validator, Feedback feedback) =>
+                async (AppDbContext context, IValidator<Models.Feedback> validator, Models.Feedback feedback) =>
                 {
                     IEnumerable<string> validatorResult = Validate(validator, feedback);
 
@@ -46,9 +41,9 @@ namespace CustomerFeedback.EndpointDefinitions
                     "/api/feedback/{id}",
                     async (
                         AppDbContext context,
-                        IValidator<Feedback> validator,
+                        IValidator<Models.Feedback> validator,
                         int id,
-                        Feedback newFeedback,
+                        Models.Feedback newFeedback,
                         IMapper mapper
                     ) =>
                     {
@@ -56,7 +51,7 @@ namespace CustomerFeedback.EndpointDefinitions
 
                         if (validatorResult.Any())
                             return Results.BadRequest(validatorResult);
-                        var feedback = await context.FindAsync<Feedback>(id);
+                        var feedback = await context.FindAsync<Models.Feedback>(id);
                         if (feedback == null)
                             return Results.NotFound();
 
@@ -72,7 +67,7 @@ namespace CustomerFeedback.EndpointDefinitions
                     "/api/feedback/{id}",
                     async (AppDbContext context, int id) =>
                     {
-                        var feedback = await context.FindAsync<Feedback>(id);
+                        var feedback = await context.FindAsync<Models.Feedback>(id);
                         if (feedback == null)
                             return Results.NotFound();
                         context.Remove(feedback);

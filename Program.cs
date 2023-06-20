@@ -1,6 +1,5 @@
 using CustomerFeedback;
 using CustomerFeedback.Context;
-using CustomerFeedback.EndpointDefinitions;
 using CustomerFeedback.Endpoints.Account;
 using CustomerFeedback.Extensions;
 using CustomerFeedback.Models;
@@ -10,11 +9,9 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // get connection string dependent on environment
-var connection = String.Empty;
-if (builder.Environment.IsDevelopment())
-    connection = builder.Configuration.GetConnectionString("DefaultConnection");
-else
-    connection = Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
+var connection = builder.Environment.IsDevelopment()
+    ? builder.Configuration.GetConnectionString("DefaultConnection")
+    : Environment.GetEnvironmentVariable("AZURE_SQL_CONNECTIONSTRING");
 
 // add services
 builder.Services.AddAppServices(builder.Configuration, connection!);
