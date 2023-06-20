@@ -21,19 +21,20 @@ namespace CustomerFeedback.Endpoints.Feedback
                 .AllowAnonymous();
 
             app.MapPost(
-                "/api/feedback/",
-                async (AppDbContext context, IValidator<Models.Feedback> validator, Models.Feedback feedback) =>
-                {
-                    IEnumerable<string> validatorResult = Validate(validator, feedback);
+                    "/api/feedback/",
+                    async (AppDbContext context, IValidator<Models.Feedback> validator, Models.Feedback feedback, HttpContext httpContext) =>
+                    {
+                        IEnumerable<string> validatorResult = Validate(validator, feedback);
 
-                    if (validatorResult.Any())
-                        return Results.BadRequest(validatorResult);
+                        if (validatorResult.Any())
+                            return Results.BadRequest(validatorResult);
 
-                    await context.Feedbacks.AddAsync(feedback);
-                    await context.SaveChangesAsync();
-                    return Results.Ok();
-                }
-            );
+                        await context.Feedbacks.AddAsync(feedback);
+                        await context.SaveChangesAsync();
+                        return Results.Created((string)httpContext.Request.Path, feedback);
+                    }
+                )
+                .Produces(statusCode: 201, contentType: "application/json");
 
             // .Produces(StatusCodes.Status201Created);
 
