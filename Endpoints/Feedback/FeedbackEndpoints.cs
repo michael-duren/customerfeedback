@@ -12,71 +12,77 @@ namespace CustomerFeedback.Endpoints.Feedback
     {
         public static void MapFeedbackEndpoints(this WebApplication app)
         {
-            app.MapGet(
-                    "/api/feedback",
-                    async (AppDbContext context, IMapper mapper) => await context.Feedbacks
-                        .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
-                        .ToListAsync())
+            app.MapGet("/api/feedback", GetFeedback)
+                .WithName("GetCoupons")
                 .Produces<List<Models.Feedback>>(statusCode: 200, contentType: "application/json")
                 .AllowAnonymous();
 
-            app.MapPost(
-                    "/api/feedback/",
-                    async (AppDbContext context, IValidator<Models.Feedback> validator, Models.Feedback feedback, HttpContext httpContext) =>
-                    {
-                        IEnumerable<string> validatorResult = Validate(validator, feedback);
+            app.MapPost("/api/feedback/", CreateFeedback)
+                .WithName("CreateFeedback")
+                .Accepts<FeedbackDto>("application/json")
+                .Produces(statusCode: 201, contentType: "application/json").Produces(400);
 
-                        if (validatorResult.Any())
-                            return Results.BadRequest(validatorResult);
 
-                        await context.Feedbacks.AddAsync(feedback);
-                        await context.SaveChangesAsync();
-                        return Results.Created((string)httpContext.Request.Path, feedback);
-                    }
-                )
-                .Produces(statusCode: 201, contentType: "application/json");
+            app.MapPut("/api/feedback/{id}", UpdateFeedback)
+                .WithName("UpdateFeedback")
+                .Accepts<FeedbackDto>("application/json")
+                .Produces(StatusCodes.Status201Created).Produces(400);
 
-            // .Produces(StatusCodes.Status201Created);
+            app.MapDelete("/api/feedback/{id}", DeleteFeedback)
+                .WithName("DeleteFeedback")
+                .Produces(StatusCodes.Status204NoContent).Produces(400);
+        }
 
-            app.MapPut(
-                    "/api/feedback/{id}",
-                    async (
-                        AppDbContext context,
-                        IValidator<Models.Feedback> validator,
-                        int id,
-                        Models.Feedback newFeedback,
-                        IMapper mapper
-                    ) =>
-                    {
-                        IEnumerable<string> validatorResult = Validate(validator, newFeedback);
+        private static async Task<IResult> GetFeedback(AppDbContext context, IMapper mapper)
+        {
+            var feedback = await context.Feedbacks
+                .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+            return Results.Ok(feedback);
+        }
 
-                        if (validatorResult.Any())
-                            return Results.BadRequest(validatorResult);
-                        var feedback = await context.FindAsync<Models.Feedback>(id);
-                        if (feedback == null)
-                            return Results.NotFound();
+        private static async Task<IResult> CreateFeedback(AppDbContext context, IValidator<Models.Feedback> validator,
+            Models.Feedback feedback,
+            HttpContext httpContext)
+        {
+            var validatorResult = Validate(validator, feedback);
 
-                        mapper.Map(newFeedback, feedback);
-                        await context.SaveChangesAsync();
+            if (validatorResult.Any())
+                return Results.BadRequest(validatorResult);
 
-                        return Results.Ok();
-                    }
-                )
-                .Produces(StatusCodes.Status201Created);
+            await context.Feedbacks.AddAsync(feedback);
+            await context.SaveChangesAsync();
+            return Results.Created((string)httpContext.Request.Path, feedback);
+        }
 
-            app.MapDelete(
-                    "/api/feedback/{id}",
-                    async (AppDbContext context, int id) =>
-                    {
-                        var feedback = await context.FindAsync<Models.Feedback>(id);
-                        if (feedback == null)
-                            return Results.NotFound();
-                        context.Remove(feedback);
-                        await context.SaveChangesAsync();
-                        return Results.Ok(204);
-                    }
-                )
-                .Produces(StatusCodes.Status204NoContent);
+        private static async Task<IResult> UpdateFeedback(AppDbContext context,
+            IValidator<Models.Feedback> validator,
+            int id,
+            Models.Feedback newFeedback,
+            IMapper mapper)
+        {
+            var validatorResult = Validate(validator, newFeedback);
+
+            if (validatorResult.Any())
+                return Results.BadRequest(validatorResult);
+            var feedback = await context.FindAsync<Models.Feedback>(id);
+            if (feedback == null)
+                return Results.NotFound();
+
+            mapper.Map(newFeedback, feedback);
+            await context.SaveChangesAsync();
+
+            return Results.Ok();
+        }
+
+        private static async Task<IResult> DeleteFeedback(AppDbContext context, int id)
+        {
+            var feedback = await context.FindAsync<Models.Feedback>(id);
+            if (feedback == null)
+                return Results.NotFound();
+            context.Remove(feedback);
+            await context.SaveChangesAsync();
+            return Results.Ok(204);
         }
     }
 }
