@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models.DTOs;
+using CustomerFeedback.Repository.IRepository;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
@@ -12,7 +13,7 @@ namespace CustomerFeedback.Endpoints.Feedback
     {
         public static void MapFeedbackEndpoints(this WebApplication app)
         {
-            app.MapGet("/api/feedback", GetFeedback)
+            app.MapGet("/api/feedback", GetAllFeedback)
                 .WithName("GetCoupons")
                 .Produces<List<Models.Feedback>>(statusCode: 200, contentType: "application/json")
                 .AllowAnonymous();
@@ -33,15 +34,15 @@ namespace CustomerFeedback.Endpoints.Feedback
                 .Produces(StatusCodes.Status204NoContent).Produces(400);
         }
 
-        private static async Task<IResult> GetFeedback(AppDbContext context, IMapper mapper)
+        private static async Task<IResult> GetAllFeedback(IFeedbackRepository context, IMapper mapper)
         {
-            var feedback = await context.Feedbacks
-                .ProjectTo<FeedbackDto>(mapper.ConfigurationProvider)
-                .ToListAsync();
-            return Results.Ok(feedback);
+            var feedbackList = await context.GetAllAsync();
+            var feedbackDtoList = mapper.Map<List<FeedbackDto>>(feedbackList);
+                
+            return Results.Ok(feedbackDtoList);
         }
 
-        private static async Task<IResult> CreateFeedback(AppDbContext context, IValidator<Models.Feedback> validator,
+        private static async Task<IResult> CreateFeedback(IFeedbackRepository context, IValidator<Models.Feedback> validator,
             Models.Feedback feedback,
             HttpContext httpContext)
         {
@@ -50,12 +51,12 @@ namespace CustomerFeedback.Endpoints.Feedback
             if (validatorResult.Any())
                 return Results.BadRequest(validatorResult);
 
-            await context.Feedbacks.AddAsync(feedback);
-            await context.SaveChangesAsync();
+            await context.CreateAsync(feedback);
+            await context.SaveAsync();
             return Results.Created((string)httpContext.Request.Path, feedback);
         }
 
-        private static async Task<IResult> UpdateFeedback(AppDbContext context,
+        private static async Task<IResult> UpdateFeedback(IFeedbackRepository context,
             IValidator<Models.Feedback> validator,
             int id,
             Models.Feedback newFeedback,
@@ -65,23 +66,25 @@ namespace CustomerFeedback.Endpoints.Feedback
 
             if (validatorResult.Any())
                 return Results.BadRequest(validatorResult);
-            var feedback = await context.FindAsync<Models.Feedback>(id);
-            if (feedback == null)
+            
+            var feedback = await context.GetSingleAsync(id);
+            if (feedback is null)
                 return Results.NotFound();
 
             mapper.Map(newFeedback, feedback);
-            await context.SaveChangesAsync();
+            await context.SaveAsync();
 
             return Results.Ok();
         }
 
-        private static async Task<IResult> DeleteFeedback(AppDbContext context, int id)
+        private static async Task<IResult> DeleteFeedback(IFeedbackRepository context, int id)
         {
-            var feedback = await context.FindAsync<Models.Feedback>(id);
-            if (feedback == null)
+            var feedback = await context.GetSingleAsync(id);
+            if (feedback is null)
                 return Results.NotFound();
-            context.Remove(feedback);
-            await context.SaveChangesAsync();
+            
+            await context.RemoveAsync(feedback);
+            await context.SaveAsync();
             return Results.Ok(204);
         }
     }

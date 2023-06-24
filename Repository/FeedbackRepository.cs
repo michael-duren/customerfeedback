@@ -12,23 +12,20 @@ namespace CustomerFeedback.Repository;
 public class FeedbackRepository : IFeedbackRepository
 {
     private readonly AppDbContext _context;
-    private readonly IMapper _mapper;
 
     public FeedbackRepository(AppDbContext context, IMapper mapper)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task<ICollection<FeedbackDto>> GetAllAsync()
+    public async Task<ICollection<Feedback>> GetAllAsync()
     {
-        return await _context.Feedbacks.ProjectTo<FeedbackDto>(_mapper.ConfigurationProvider).ToListAsync();
+        return await _context.Feedbacks.ToListAsync();
     }
 
-    public async Task<FeedbackDto?> GetSingleAsync(int id)
+    public async Task<Feedback?> GetSingleAsync(int id)
     {
-        return await _context.Feedbacks.ProjectTo<FeedbackDto>(_mapper.ConfigurationProvider)
-            .FirstOrDefaultAsync(x => x.Id == id)!;
+        return await _context.Feedbacks.FirstOrDefaultAsync(x => x.Id == id)!;
     }
 
     public async Task CreateAsync(Feedback feedback)
