@@ -30,12 +30,12 @@ namespace CustomerFeedback.Services
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]!));
 
             // signing credentials, the key and what alg to use
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                SigningCredentials = creds,
+                SigningCredentials = credentials,
                 Expires = DateTime.Now.AddDays(1),
             };
 

@@ -57,10 +57,10 @@ namespace CustomerFeedback.Endpoints.Feedback
         private static async Task<IResult> UpdateFeedback(IFeedbackRepository context,
             IValidator<Models.Feedback> validator,
             int id,
-            Models.Feedback newFeedback,
+            Models.Feedback newFeedbackDto,
             IMapper mapper)
         {
-            var validatorResult = Validate(validator, newFeedback);
+            var validatorResult = Validate(validator, newFeedbackDto);
 
             var validationArr = validatorResult as string[] ?? validatorResult.ToArray();
             if (validationArr.Any())
@@ -70,7 +70,8 @@ namespace CustomerFeedback.Endpoints.Feedback
             if (feedback is null)
                 return Results.NotFound();
 
-            mapper.Map(newFeedback, feedback);
+            Models.Feedback newFeedback =  mapper.Map(newFeedbackDto, feedback);
+            await context.UpdateAsync(newFeedback);
             await context.SaveAsync();
 
             return Results.Ok();
@@ -78,7 +79,7 @@ namespace CustomerFeedback.Endpoints.Feedback
 
         private static async Task<IResult> DeleteFeedback(IFeedbackRepository context, int id)
         {
-            Models.Feedback feedback = await context.GetSingleAsync(id);
+            var feedback = await context.GetSingleAsync(id);
             if (feedback is null)
                 return Results.NotFound();
             

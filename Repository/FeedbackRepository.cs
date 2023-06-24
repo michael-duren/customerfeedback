@@ -1,4 +1,3 @@
-using AutoMapper;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using CustomerFeedback.Repository.IRepository;
@@ -10,7 +9,7 @@ public class FeedbackRepository : IFeedbackRepository
 {
     private readonly AppDbContext _context;
 
-    public FeedbackRepository(AppDbContext context, IMapper mapper)
+    public FeedbackRepository(AppDbContext context)
     {
         _context = context;
     }
@@ -22,7 +21,7 @@ public class FeedbackRepository : IFeedbackRepository
 
     public async Task<Feedback> GetSingleAsync(int id)
     {
-        return await _context.Feedbacks.FindAsync(id)!;
+        return await _context.Feedbacks.FindAsync(id);
     }
 
     public async Task CreateAsync(Feedback feedback)
