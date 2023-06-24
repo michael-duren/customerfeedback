@@ -1,11 +1,8 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
-using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CustomerFeedback.Repository;
 
@@ -23,9 +20,9 @@ public class FeedbackRepository : IFeedbackRepository
         return await _context.Feedbacks.ToListAsync();
     }
 
-    public async Task<Feedback?> GetSingleAsync(int id)
+    public async Task<Feedback> GetSingleAsync(int id)
     {
-        return await _context.Feedbacks.FirstOrDefaultAsync(x => x.Id == id)!;
+        return await _context.Feedbacks.FindAsync(id)!;
     }
 
     public async Task CreateAsync(Feedback feedback)
@@ -40,7 +37,7 @@ public class FeedbackRepository : IFeedbackRepository
 
     public async Task RemoveAsync(Feedback feedback)
     {
-        _context.Feedbacks.Update(feedback);
+        _context.Feedbacks.Remove(feedback);
     }
 
     public async Task SaveAsync()

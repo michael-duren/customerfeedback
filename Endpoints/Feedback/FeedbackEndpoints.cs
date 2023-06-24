@@ -1,10 +1,7 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using CustomerFeedback.Context;
 using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Repository.IRepository;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
 namespace CustomerFeedback.Endpoints.Feedback
@@ -27,7 +24,7 @@ namespace CustomerFeedback.Endpoints.Feedback
             app.MapPut("/api/feedback/{id}", UpdateFeedback)
                 .WithName("UpdateFeedback")
                 .Accepts<FeedbackDto>("application/json")
-                .Produces(StatusCodes.Status201Created).Produces(400);
+                .Produces(StatusCodes.Status204NoContent).Produces(400);
 
             app.MapDelete("/api/feedback/{id}", DeleteFeedback)
                 .WithName("DeleteFeedback")
@@ -48,12 +45,13 @@ namespace CustomerFeedback.Endpoints.Feedback
         {
             var validatorResult = Validate(validator, feedback);
 
-            if (validatorResult.Any())
-                return Results.BadRequest(validatorResult);
+            var validationArr = validatorResult as string[] ?? validatorResult.ToArray();
+            if (validationArr.Any())
+                return Results.BadRequest(validationArr);
 
             await context.CreateAsync(feedback);
             await context.SaveAsync();
-            return Results.Created((string)httpContext.Request.Path, feedback);
+            return Results.Created(httpContext.Request.Path, feedback);
         }
 
         private static async Task<IResult> UpdateFeedback(IFeedbackRepository context,
@@ -64,8 +62,9 @@ namespace CustomerFeedback.Endpoints.Feedback
         {
             var validatorResult = Validate(validator, newFeedback);
 
-            if (validatorResult.Any())
-                return Results.BadRequest(validatorResult);
+            var validationArr = validatorResult as string[] ?? validatorResult.ToArray();
+            if (validationArr.Any())
+                return Results.BadRequest(validationArr);
             
             var feedback = await context.GetSingleAsync(id);
             if (feedback is null)
@@ -79,7 +78,7 @@ namespace CustomerFeedback.Endpoints.Feedback
 
         private static async Task<IResult> DeleteFeedback(IFeedbackRepository context, int id)
         {
-            var feedback = await context.GetSingleAsync(id);
+            Models.Feedback feedback = await context.GetSingleAsync(id);
             if (feedback is null)
                 return Results.NotFound();
             
