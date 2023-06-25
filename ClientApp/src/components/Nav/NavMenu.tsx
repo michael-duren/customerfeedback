@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import {useState} from 'react';
+import {Link} from 'react-router-dom';
 import './NavMenu.css';
 import LoginForm from '../Forms/LoginForm';
-import { Button } from 'reactstrap';
-import { useStore } from '../../stores/store';
-import { observer } from 'mobx-react-lite';
+import {Badge, Button, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown} from 'reactstrap';
+import {useStore} from '../../stores/store';
+import {observer} from 'mobx-react-lite';
+import {RxAvatar} from 'react-icons/rx'
 
 export default observer(function NavMenu() {
-  const { userStore } = useStore();
-  const { user, logout } = userStore;
+  const {userStore} = useStore();
+  const {user, logout} = userStore;
   const [loginModal, setLoginModal] = useState(false);
   const toggleLogin = () => setLoginModal(!loginModal);
 
@@ -26,16 +27,64 @@ export default observer(function NavMenu() {
             <li>
               <Link to={'/feedback'}>Feedback</Link>
             </li>
+            {/* User List for Admins */}
+            {
+              user?.roles.includes("Admin") &&
+              <li>
+                <Link to={'/users'}>Users</Link>
+              </li>
+            }
+            {/* Login/Logout Buttons */}
             <li>
-              {!user ? (
+              {!user && (
                 <Button onClick={toggleLogin} color="primary">
                   Login
                 </Button>
-              ) : (
-                <Button onClick={() => logout()} className="btn-dark">
-                  Logout
-                </Button>
-              )}
+              )}{
+              user?.roles.includes("Admin") && (
+                <UncontrolledDropdown group>
+                  <Button className="" color="primary">
+                    <Link className="text-light d-flex gap-2 align-items-center text-decoration-none" to={'/'}>
+                      <RxAvatar size={25}/>
+                      <span>{user?.userName[0].toUpperCase()}</span>
+                    </Link>
+                  </Button>
+                  <DropdownToggle
+                    caret
+                    color="primary"
+                  />
+                  <DropdownMenu>
+                    <DropdownItem className="d-flex flex-column gap-2" header>
+                      <div className={"d-flex gap-2 align-items-center"}>
+                        <span><RxAvatar size={20}/></span>
+                        {user?.userName}
+                      </div>
+                      <Badge>ADMIN</Badge>
+                    </DropdownItem>
+                    <DropdownItem divider/>
+                    <DropdownItem text>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <Link to={'/users'}>
+                        View Users
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem>
+                      <Link to={'/feedback'}>
+                        Delete Feedback
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem divider/>
+                    <DropdownItem onClick={() => logout()}>
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )} {user && !(user.roles.includes("Admin")) && (
+              <Button onClick={() => logout()} className="btn-dark">
+                Logout
+              </Button>
+            )}
             </li>
           </ul>
         </div>
@@ -46,5 +95,6 @@ export default observer(function NavMenu() {
         modal={loginModal}
       />
     </header>
-  );
+  )
+    ;
 });

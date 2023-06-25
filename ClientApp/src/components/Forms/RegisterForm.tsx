@@ -27,7 +27,7 @@ export default function RegisterForm({ modal, toggle }: Props) {
   const formik = useFormik({
     initialValues: {
       displayName: '',
-      username: '',
+      userName: '',
       email: '',
       password: '',
       reEnterPassword: '',
@@ -35,13 +35,13 @@ export default function RegisterForm({ modal, toggle }: Props) {
     },
     validationSchema: registerFormSchema,
     onSubmit: async (values) => {
-      const { displayName, username, email, password } = values;
+      const { displayName, userName, email, password } = values;
       try {
-        await register({ displayName, username, email, password });
+        await register({ displayName, userName, email, password });
       } catch (e: any) {
         formik.setErrors({ errors: e });
       }
-      register({ displayName, username, email, password });
+      register({ displayName, userName, email, password });
       console.log(values);
     },
   });
@@ -69,19 +69,19 @@ export default function RegisterForm({ modal, toggle }: Props) {
             ) : null}
           </FormGroup>
           <FormGroup>
-            <Label for="username">Username</Label>
+            <Label for="userName">Username</Label>
             <Input
-              id="username"
+              id="userName"
               onChange={formik.handleChange}
-              value={formik.values.username}
+              value={formik.values.userName}
               onBlur={formik.handleBlur}
               required
               name="username"
               type="text"
             />
-            {formik.touched.username && formik.errors.username ? (
+            {formik.touched.userName && formik.errors.userName ? (
               <Alert className="mt-2 p-2" color="danger">
-                {formik.errors.username}
+                {formik.errors.userName}
               </Alert>
             ) : null}
           </FormGroup>

@@ -1,18 +1,18 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Feedback, FeedbackFormValues } from '../models/feedback';
-import { User, UserFormValues } from '../models/user';
-import { toast } from 'react-toastify';
-import { router } from '../pages/router';
-import { store } from '../stores/store';
+import axios, {AxiosError, AxiosResponse} from 'axios';
+import {Feedback, FeedbackFormValues} from '../models/feedback';
+import {User, UserFormValues} from '../models/user';
+import {toast} from 'react-toastify';
+import {router} from '../pages/router';
+import {store} from '../stores/store';
 
 axios.interceptors.response.use(
   (response) => response,
-  (error: AxiosError) => {
-    const { data, status, config } = error.response as AxiosResponse;
+  async (error: AxiosError) => {
+    const {data, status, config} = error.response as AxiosResponse;
     switch (status) {
       case 400:
         if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
-          router.navigate('/not-found');
+          await router.navigate('/not-found');
         }
         if (data.errors) {
           const modalStateErrors = [];
@@ -34,11 +34,11 @@ axios.interceptors.response.use(
         toast.error('forbidden');
         break;
       case 404:
-        router.navigate('/not-found');
+        await router.navigate('/not-found');
         break;
       case 500:
         store.commonStore.setServerError(data);
-        router.navigate('/server-error');
+        await router.navigate('/server-error');
         break;
     }
 

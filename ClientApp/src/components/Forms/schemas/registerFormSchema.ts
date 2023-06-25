@@ -11,7 +11,7 @@ export const registerFormSchema = Yup.object({
       /^[a-zA-Z0-9]+$/,
       'Display name must contain only letters and numbers'
     ),
-  username: Yup.string()
+  userName: Yup.string()
     .required("Username can't be empty")
     .min(6)
     .matches(

@@ -27,7 +27,7 @@ export default function FeedbackCard({ feedback }: Props) {
   return (
     <>
       <div className="feedback-container">
-        {user && (
+        {user && user.roles.includes("Admin") && (
           <button onClick={toggle} className="btn btn-outline-danger">
             <BiTrash />
           </button>

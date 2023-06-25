@@ -25,7 +25,7 @@ export default observer(function FeedbackPage() {
         }`}
       >
         <h1 className="h2">Feedback</h1>
-        {user && (
+        {user && !(user.roles.includes("Admin")) && (
           <Button onClick={toggle} color="info">
             Add Feedback
           </Button>

@@ -5,62 +5,65 @@ import {store} from './store';
 import {router} from '../pages/router';
 
 export default class UserStore {
-    user: User | null = null;
-    loadingUser: boolean = true;
+  user: User | null = null;
+  loadingUser: boolean = true;
 
-    constructor() {
-        makeAutoObservable(this);
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  get isLoggedIn() {
+    return !!this.user;
+  }
+
+  login = async (creds: UserFormValues): Promise<void> => {
+    try {
+      const user = await agent.AccountApi.login(creds);
+      store.commonStore.setToken(user.token);
+      runInAction(() => (this.user = user));
+      console.log(user);
+      await router.navigate('/feedback');
+    } catch (error) {
+      throw error;
     }
+  };
 
-    get isLoggedIn() {
-        return !!this.user;
+  register = async (creds: UserFormValues): Promise<void> => {
+    try {
+      const user = await agent.AccountApi.register(creds);
+      store.commonStore.setToken(user.token);
+      runInAction(() => (this.user = user));
+      await router.navigate('/feedback');
+    } catch (error) {
+      throw error;
     }
+  };
 
-    login = async (creds: UserFormValues): Promise<void> => {
-        try {
-            const user = await agent.AccountApi.login(creds);
-            store.commonStore.setToken(user.token);
-            runInAction(() => (this.user = user));
-            console.log(user);
-            await router.navigate('/feedback');
-        } catch (error) {
-            throw error;
-        }
-    };
+  logout = async (): Promise<void> => {
+    store.commonStore.setToken(null);
+    this.user = null;
+    await router.navigate('/');
+  };
 
-    register = async (creds: UserFormValues): Promise<void> => {
-        try {
-            const user = await agent.AccountApi.register(creds);
-            store.commonStore.setToken(user.token);
-            runInAction(() => (this.user = user));
-            await router.navigate('/feedback');
-        } catch (error) {
-            throw error;
-        }
-    };
+  // setters
+  setUser = (user: User) => {
+    this.user = user;
+  };
 
-    logout = async (): Promise<void> => {
-        store.commonStore.setToken(null);
-        this.user = null;
-        await router.navigate('/');
-    };
+  setLoadingUser = (loading: boolean) => {
+    this.loadingUser = loading;
+  };
 
-    // setters
-    setUser = (user: User) => {
-        this.user = user;
-    };
-
-    setLoadingUser = (loading: boolean) => {
-        this.loadingUser = loading;
-    };
-
-    // getters
-    getUser = async (): Promise<void> => {
-        try {
-            const user = await agent.AccountApi.getCurrentUser();
-            runInAction(() => (this.user = user));
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  // getters
+  getUser = async (): Promise<void> => {
+    try {
+      const user = await agent.AccountApi.getCurrentUser();
+      runInAction(() => {
+        this.user = user
+        console.log(user)
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }
