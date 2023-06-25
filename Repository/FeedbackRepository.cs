@@ -19,7 +19,7 @@ public class FeedbackRepository : IFeedbackRepository
         return await _context.Feedbacks.ToListAsync();
     }
 
-    public async Task<Feedback> GetSingleAsync(int id)
+    public async Task<Feedback?> GetSingleAsync(int id)
     {
         return await _context.Feedbacks.FindAsync(id);
     }

@@ -49,6 +49,12 @@ namespace CustomerFeedback.Extensions
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser()
                     .Build();
+                opt.AddPolicy("admin_access", policy =>
+                {
+                    policy
+                        .RequireRole("Admin")
+                        .RequireClaim("Roles", "Admin");
+                });
             });
 
             services.AddScoped<TokenService>();

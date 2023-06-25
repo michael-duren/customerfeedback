@@ -28,7 +28,8 @@ namespace CustomerFeedback.Endpoints.Feedback
 
             app.MapDelete("/api/feedback/{id}", DeleteFeedback)
                 .WithName("DeleteFeedback")
-                .Produces(StatusCodes.Status204NoContent).Produces(400);
+                .Produces(StatusCodes.Status204NoContent).Produces(400)
+                .RequireAuthorization("admin_access");
         }
 
         private static async Task<IResult> GetAllFeedback(IFeedbackRepository context, IMapper mapper)
