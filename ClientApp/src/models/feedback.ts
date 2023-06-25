@@ -4,7 +4,7 @@ export interface Feedback {
   description: string;
   rating: number;
   dateReviewed: string;
-  username: string;
+  userName: string;
 }
 
 export interface FeedbackFormValues {

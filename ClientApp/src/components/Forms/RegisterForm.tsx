@@ -76,7 +76,7 @@ export default function RegisterForm({ modal, toggle }: Props) {
               value={formik.values.userName}
               onBlur={formik.handleBlur}
               required
-              name="username"
+              name="userName"
               type="text"
             />
             {formik.touched.userName && formik.errors.userName ? (

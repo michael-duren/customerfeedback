@@ -31,7 +31,7 @@ export default observer(function NavMenu() {
             {
               user?.roles.includes("Admin") &&
               <li>
-                <Link to={'/users'}>Users</Link>
+                <Link to={'/admin/user-list'}>Users</Link>
               </li>
             }
             {/* Login/Logout Buttons */}
@@ -65,7 +65,7 @@ export default observer(function NavMenu() {
                     <DropdownItem text>
                     </DropdownItem>
                     <DropdownItem>
-                      <Link to={'/users'}>
+                      <Link to={'/admin/user-list'}>
                         View Users
                       </Link>
                     </DropdownItem>

@@ -8,6 +8,6 @@ namespace CustomerFeedback.Models.DTOs
         public int Rating { get; set; }
         public DateTime DateReviewed { get; set; }
 
-        public string Username { get; set; } = null!;
+        public string UserName { get; set; } = null!;
     }
 }

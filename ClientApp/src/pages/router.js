@@ -5,6 +5,7 @@ import FeedBackPage from './Feedback/FeedBackPage';
 import NotFound from './Errors/NotFound';
 import ServerError from './Errors/ServerError';
 import { Navigate } from 'react-router-dom';
+import UserList from "./Admin/UserList/UserList";
 
 export const routes = [
   {
@@ -13,6 +14,7 @@ export const routes = [
     children: [
       { path: '', element: <HomePage /> },
       { path: '/feedback', element: <FeedBackPage /> },
+      { path: '/admin/user-list', element: <UserList />},
       { path: 'not-found', element: <NotFound /> },
       { path: 'server-error', element: <ServerError /> },
       { path: '*', element: <Navigate replace to={'/not-found'} /> },

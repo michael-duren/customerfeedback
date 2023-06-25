@@ -46,12 +46,12 @@ namespace CustomerFeedback.Endpoints.Account
         }
 
         private async Task<bool> BeUniqueUsername(
-            string username,
+            string userName,
             CancellationToken cancellationToken
         )
         {
             var users = await UserManager.Users.ToListAsync();
-            var user = users.Find(u => u.UserName == username);
+            var user = users.Find(u => u.UserName == userName);
             return user is null;
         }
     }

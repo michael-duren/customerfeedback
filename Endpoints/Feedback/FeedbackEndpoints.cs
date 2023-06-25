@@ -1,7 +1,9 @@
 using AutoMapper;
+using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Repository.IRepository;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using static CustomerFeedback.Endpoints.ValidateResult;
 
 namespace CustomerFeedback.Endpoints.Feedback
@@ -32,10 +34,18 @@ namespace CustomerFeedback.Endpoints.Feedback
                 .RequireAuthorization("admin_access");
         }
 
-        private static async Task<IResult> GetAllFeedback(IFeedbackRepository context, IMapper mapper)
+        private static async Task<IResult> GetAllFeedback(IFeedbackRepository context, IMapper mapper, UserManager<AppUser> userManager)
         {
             var feedbackList = await context.GetAllAsync();
-            var feedbackDtoList = mapper.Map<List<FeedbackDto>>(feedbackList);
+            List<FeedbackDto> feedbackDtoList = new();
+            foreach (var feedback in feedbackList)
+            {
+                if (feedback.UserId == null) continue;
+                var user = await userManager.FindByIdAsync(feedback.UserId);
+                var feedbackDto = mapper.Map<FeedbackDto>(feedback);
+                if (user is not null) feedbackDto.UserName = user.UserName!;
+                feedbackDtoList.Add(feedbackDto);
+            }
                 
             return Results.Ok(feedbackDtoList);
         }
@@ -71,7 +81,7 @@ namespace CustomerFeedback.Endpoints.Feedback
             if (feedback is null)
                 return Results.NotFound();
 
-            Models.Feedback newFeedback =  mapper.Map(newFeedbackDto, feedback);
+            var newFeedback =  mapper.Map(newFeedbackDto, feedback);
             await context.UpdateAsync(newFeedback);
             await context.SaveAsync();
 

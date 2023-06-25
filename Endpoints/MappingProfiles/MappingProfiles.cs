@@ -9,10 +9,7 @@ namespace CustomerFeedback.Endpoints.MappingProfiles
         {
             // Feedback Maps
             CreateMap<Models.Feedback, Models.Feedback>();
-            CreateMap<Models.Feedback, FeedbackDto>()
-                .ForMember(dest => dest.Username,
-                    opt => opt.MapFrom(src => src.User.UserName));
-            CreateMap<AppUserDisplayDto, Models.AppUser>().ReverseMap();
+            CreateMap<Models.Feedback, FeedbackDto>();
         }
     }
 }
