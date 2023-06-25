@@ -4,9 +4,9 @@ using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
 using CustomerFeedback.Services;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
 namespace CustomerFeedback.Endpoints.Account
 {
@@ -20,7 +20,7 @@ namespace CustomerFeedback.Endpoints.Account
 
             app.MapGet("/api/admin/users", GetAllUsers)
                 .WithName("GetAllUsers")
-                .Produces<List<AppUserDisplayDto>>(200)
+                .Produces<List<AppUserDisplayDto>>(contentType: "application/json")
                 .Produces(StatusCodes.Status401Unauthorized)
                 .AllowAnonymous();
 
@@ -43,10 +43,22 @@ namespace CustomerFeedback.Endpoints.Account
         private static async Task<IResult> GetAllUsers(UserManager<AppUser> userManager, AppDbContext context)
         {
             var users = await context.AppUsers.ToListAsync();
+            var userDisplayDto = new List<AppUserDisplayDto>();
 
-            var usersListDtoResult = users.Select(async user => await CreateAppUserListDto(user, userManager));
+            foreach (var user in users)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                userDisplayDto.Add(new AppUserDisplayDto()
+                {
+                    Id = user.Id,
+                    DisplayName = user.DisplayName,
+                    UserName = user.UserName!,
+                    Email = user.Email!,
+                    Roles = roles
+                });
+            }
 
-            return Results.Ok(usersListDtoResult);
+            return Results.Ok(userDisplayDto);
         }
 
         private static async Task<IResult> GetLoggedInUser(
@@ -135,20 +147,6 @@ namespace CustomerFeedback.Endpoints.Account
                     validationFailures => validationFailures.Key,
                     validationFailures => validationFailures.Select(e => e.ErrorMessage).ToArray()
                 );
-        }
-
-        private static async Task<AppUserDisplayDto> CreateAppUserListDto(AppUser user,
-            UserManager<AppUser> userManager)
-        {
-            var roles = await userManager.GetRolesAsync(user);
-            return new AppUserDisplayDto()
-            {
-                Id = user.Id,
-                UserName = user.UserName!,
-                Email = user.Email!,
-                DisplayName = user.DisplayName,
-                Roles = roles
-            };
         }
     }
 }
