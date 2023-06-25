@@ -2,6 +2,8 @@ using CustomerFeedback.Context;
 using CustomerFeedback.Endpoints.MappingProfiles;
 using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
+using CustomerFeedback.Repository;
+using CustomerFeedback.Repository.IRepository;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +20,9 @@ namespace CustomerFeedback.Extensions
         )
         {
             // Add services to the container.
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddEndpointsApiExplorer();
+            services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             // add swagger
             services.AddSwaggerGen(x =>

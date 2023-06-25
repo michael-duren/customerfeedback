@@ -7,5 +7,6 @@ namespace CustomerFeedback.Models.DTOs
         public string UserName { get; set; } = null!;
         public string DisplayName { get; set; } = null!;
         public string Token { get; set; } = null!;
+        public IList<string> Roles { get; set; } = null!;
     }
 }

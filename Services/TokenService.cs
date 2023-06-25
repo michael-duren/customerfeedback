@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using CustomerFeedback.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace CustomerFeedback.Services
@@ -9,22 +10,26 @@ namespace CustomerFeedback.Services
     public class TokenService
     {
         private readonly IConfiguration _config;
+        private readonly UserManager<AppUser> _userManager;
 
-        public TokenService(IConfiguration config)
+        public TokenService(IConfiguration config, UserManager<AppUser> userManager)
         {
             _config = config;
+            _userManager = userManager;
         }
 
-        public string CreateToken(AppUser user)
+        public async Task<string> CreateToken(AppUser user)
         {
+            var userRoles = await _userManager.GetRolesAsync(user);
             // create the claims for the JWT
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email!),
                 new Claim(ClaimTypes.Name, user.UserName!),
-                new Claim(ClaimTypes.NameIdentifier, user.Id)
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
+            claims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             // create a new symmetric key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]!));

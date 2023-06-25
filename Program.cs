@@ -4,8 +4,6 @@ using CustomerFeedback.Endpoints.Account;
 using CustomerFeedback.Endpoints.Feedback;
 using CustomerFeedback.Extensions;
 using CustomerFeedback.Models;
-using CustomerFeedback.Repository;
-using CustomerFeedback.Repository.IRepository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +17,6 @@ var connection = builder.Environment.IsDevelopment()
 // add services
 builder.Services.AddAppServices(builder.Configuration, connection!);
 builder.Services.AddIdentityServices(builder.Configuration);
-builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
 // build app
 var app = builder.Build();

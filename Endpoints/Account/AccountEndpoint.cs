@@ -23,8 +23,12 @@ namespace CustomerFeedback.Endpoints.Account
                     var user = await userManager.FindByEmailAsync(
                         claimsPrincipal.FindFirstValue(ClaimTypes.Email)!
                     );
+                    
 
-                    return CreateUserObject(tokenService, user!);
+                    if (user is null) return Results.BadRequest();
+                    var userObj = await CreateUserObject(tokenService, user, userManager);
+                    return Results.Ok(userObj);
+
                 }
             );
             app.MapPost(
@@ -41,7 +45,8 @@ namespace CustomerFeedback.Endpoints.Account
 
                         var result = await userManager.CheckPasswordAsync(user, loginDto.Password);
 
-                        return result ? Results.Json(CreateUserObject(tokenService, user)) : Results.Unauthorized();
+                        var userObj = await CreateUserObject(tokenService, user, userManager);
+                        return result ? Results.Ok(userObj) : Results.Unauthorized();
                     }
                 )
                 .AllowAnonymous();
@@ -67,20 +72,21 @@ namespace CustomerFeedback.Endpoints.Account
                         {
                             Email = registerDto.Email,
                             UserName = registerDto.Username,
-                            DisplayName = registerDto.DisplayName
+                            DisplayName = registerDto.DisplayName,
                         };
 
-                        var result = await userManager.CreateAsync(newUser);
+                        var result = await userManager.CreateAsync(newUser, registerDto.Password);
 
-                        return result.Succeeded
-                            ? Results.Ok(CreateUserObject(tokenService, newUser))
-                            : Results.BadRequest(result.Errors);
+                        if (!result.Succeeded) return Results.BadRequest(result.Errors);
+                        await userManager.AddToRoleAsync(newUser, "User");
+                        var userObj = await CreateUserObject(tokenService, newUser, userManager);
+                        return Results.Ok(userObj);
                     }
                 )
                 .AllowAnonymous();
         }
 
-        private static AppUserDto CreateUserObject(TokenService tokenService, AppUser newUser)
+        private static async Task<AppUserDto> CreateUserObject(TokenService tokenService, AppUser newUser, UserManager<AppUser> userManager)
         {
             return new AppUserDto
             {
@@ -88,7 +94,8 @@ namespace CustomerFeedback.Endpoints.Account
                 DisplayName = newUser.DisplayName,
                 UserName = newUser.UserName!,
                 Email = newUser.Email!,
-                Token = tokenService.CreateToken(newUser)
+                Token = await tokenService.CreateToken(newUser),
+                Roles = await userManager.GetRolesAsync(newUser)
             };
         }
 
