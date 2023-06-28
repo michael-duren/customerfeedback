@@ -23,8 +23,7 @@ namespace CustomerFeedback.Endpoints.Account
                 .WithName("GetAllUsers")
                 .Produces<List<AppUserDisplayDto>>(contentType: "application/json")
                 .Produces(StatusCodes.Status401Unauthorized)
-                .AllowAnonymous();
-                // .RequireAuthorization("admin_access");
+                .RequireAuthorization("admin_access");
 
             app.MapPost("/api/account/login", LoginUser)
                 .WithName("Login")
