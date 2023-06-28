@@ -52,8 +52,7 @@ namespace CustomerFeedback.Extensions
                 opt.AddPolicy("admin_access", policy =>
                 {
                     policy
-                        .RequireRole("Admin")
-                        .RequireClaim("Roles", "Admin");
+                        .RequireRole("Admin");
                 });
             });
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CustomerFeedback.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230619123659_AddFKToFeedback")]
-    partial class AddFKToFeedback
+    [Migration("20230627155742_INITIALCREATE")]
+    partial class INITIALCREATE
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -263,7 +263,7 @@ namespace CustomerFeedback.Migrations
             modelBuilder.Entity("CustomerFeedback.Models.Feedback", b =>
                 {
                     b.HasOne("CustomerFeedback.Models.AppUser", "User")
-                        .WithMany()
+                        .WithMany("Feedbacks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -320,6 +320,11 @@ namespace CustomerFeedback.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CustomerFeedback.Models.AppUser", b =>
+                {
+                    b.Navigation("Feedbacks");
                 });
 #pragma warning restore 612, 618
         }

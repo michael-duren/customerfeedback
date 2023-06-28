@@ -56,6 +56,8 @@ namespace CustomerFeedback
 
                     if (user.UserName == "Admin")
                         await userManager.AddToRoleAsync(user, "Admin");
+                    else
+                        await userManager.AddToRoleAsync(user, "Member");
                 }
             }
 
@@ -131,10 +133,11 @@ namespace CustomerFeedback
                     UserId = createdUsers[1].Id
                 },
             };
-
+            
             foreach (var feedback in feedbacks)
             {
                 context.Feedbacks.Add(feedback);
+                
             }
 
             await context.SaveChangesAsync();

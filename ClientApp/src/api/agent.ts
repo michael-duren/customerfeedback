@@ -79,6 +79,7 @@ const AccountApi = {
     requests.post<User>('/api/account/login', user),
   register: (user: UserFormValues) =>
     requests.post<User>('/api/account/register', user),
+  getAllUsers: () => requests.get<User[]>('/api/admin/users'),
 };
 
 const agent = {

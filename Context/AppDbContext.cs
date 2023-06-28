@@ -11,5 +11,6 @@ namespace CustomerFeedback.Context
 
         public DbSet<AppUser> AppUsers { get; set; } = null!;
         public DbSet<Feedback> Feedbacks { get; set; } = null!;
+
     }
 }

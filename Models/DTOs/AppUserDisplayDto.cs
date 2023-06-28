@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace CustomerFeedback.Models.DTOs;
 
 public class AppUserDisplayDto
@@ -7,4 +9,5 @@ public class AppUserDisplayDto
     public string UserName { get; set; } = null!;
     public string DisplayName { get; set; } = null!;
     public IList<string> Roles { get; set; } = null!;
+    public List<Feedback> Feedbacks { get; set; }
 }

@@ -9,9 +9,9 @@ namespace CustomerFeedback.Models
         public string Description { get; set; } = null!;
         public int Rating { get; set; }
         public DateTime DateReviewed { get; set; }
-        public string? UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public AppUser User { get; set; } = null!;
+        public virtual AppUser User { get; set; } = null!;
     }
 }

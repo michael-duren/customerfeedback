@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Security.Claims;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
@@ -23,6 +24,7 @@ namespace CustomerFeedback.Endpoints.Account
                 .Produces<List<AppUserDisplayDto>>(contentType: "application/json")
                 .Produces(StatusCodes.Status401Unauthorized)
                 .AllowAnonymous();
+                // .RequireAuthorization("admin_access");
 
             app.MapPost("/api/account/login", LoginUser)
                 .WithName("Login")
@@ -42,20 +44,21 @@ namespace CustomerFeedback.Endpoints.Account
 
         private static async Task<IResult> GetAllUsers(UserManager<AppUser> userManager, AppDbContext context)
         {
-            var users = await context.AppUsers.ToListAsync();
+            var users = await context.AppUsers.Include(u=>u.Feedbacks).ToListAsync();
             var userDisplayDto = new List<AppUserDisplayDto>();
 
             foreach (var user in users)
             {
                 var roles = await userManager.GetRolesAsync(user);
-                userDisplayDto.Add(new AppUserDisplayDto()
+                var newUserDisplayDto = new AppUserDisplayDto()
                 {
                     Id = user.Id,
                     DisplayName = user.DisplayName,
                     UserName = user.UserName!,
                     Email = user.Email!,
-                    Roles = roles
-                });
+                    Roles = roles,
+                };
+                userDisplayDto.Add(newUserDisplayDto);
             }
 
             return Results.Ok(userDisplayDto);
