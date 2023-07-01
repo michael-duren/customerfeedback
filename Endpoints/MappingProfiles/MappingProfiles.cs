@@ -10,6 +10,7 @@ namespace CustomerFeedback.Endpoints.MappingProfiles
             // Feedback Maps
             CreateMap<Models.Feedback, Models.Feedback>();
             CreateMap<Models.Feedback, FeedbackDto>();
+            CreateMap<Models.Feedback, UserFeedbackDto>();
         }
     }
 }

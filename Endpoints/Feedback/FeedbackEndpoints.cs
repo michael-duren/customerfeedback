@@ -40,7 +40,6 @@ namespace CustomerFeedback.Endpoints.Feedback
             List<FeedbackDto> feedbackDtoList = new();
             foreach (var feedback in feedbackList)
             {
-                if (feedback.UserId == null) continue;
                 var user = await userManager.FindByIdAsync(feedback.UserId);
                 var feedbackDto = mapper.Map<FeedbackDto>(feedback);
                 if (user is not null) feedbackDto.UserName = user.UserName!;

@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
+using AutoMapper;
 using CustomerFeedback.Context;
 using CustomerFeedback.Models;
 using CustomerFeedback.Models.DTOs;
@@ -23,7 +25,8 @@ namespace CustomerFeedback.Endpoints.Account
                 .WithName("GetAllUsers")
                 .Produces<List<AppUserDisplayDto>>(contentType: "application/json")
                 .Produces(StatusCodes.Status401Unauthorized)
-                .RequireAuthorization("admin_access");
+                .AllowAnonymous();
+                // .RequireAuthorization("admin_access");
 
             app.MapPost("/api/account/login", LoginUser)
                 .WithName("Login")
@@ -41,7 +44,7 @@ namespace CustomerFeedback.Endpoints.Account
         }
 
 
-        private static async Task<IResult> GetAllUsers(UserManager<AppUser> userManager, AppDbContext context)
+        private static async Task<IResult> GetAllUsers(UserManager<AppUser> userManager, AppDbContext context, IMapper mapper)
         {
             var users = await context.AppUsers.Include(u=>u.Feedbacks).ToListAsync();
             var userDisplayDto = new List<AppUserDisplayDto>();
@@ -56,6 +59,7 @@ namespace CustomerFeedback.Endpoints.Account
                     UserName = user.UserName!,
                     Email = user.Email!,
                     Roles = roles,
+                    Feedbacks = mapper.Map<List<UserFeedbackDto>>(user.Feedbacks)
                 };
                 userDisplayDto.Add(newUserDisplayDto);
             }
